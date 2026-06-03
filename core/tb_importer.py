@@ -32,14 +32,17 @@ BALANCING_LINE_PATTERN = re.compile(
 )
 
 
-def _norm(s: str) -> str:
-    return str(s or "").strip().lower().replace("_", " ")
+def _normalise(s: str) -> str:
+    s = (s or "").lower()
+    s = re.sub(r"[\(\)\–\-/]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
 
 
-def _detect_col(headers: list[str], candidates: set[str]) -> int | None:
-    for i, h in enumerate(headers):
-        if _norm(h) in candidates:
-            return i
+def _detect_columns_num(headers: list[str], candidates: set[str]) -> int | None:
+    for index, header in enumerate(headers):
+        if _normalise(header) in candidates:
+            return index
     return None
 
 
@@ -87,13 +90,6 @@ def _is_balancing_line(ledger_name: str) -> bool:
         return True
     nl = name.lower()
     return ("balancing figure" in nl) or ("p&l transfer" in nl) or ("p & l transfer" in nl)
-
-
-def _normalise(s: str) -> str:
-    s = (s or "").lower()
-    s = re.sub(r"[\(\)\–\-/]", " ", s)
-    s = re.sub(r"\s+", " ", s).strip()
-    return s
 
 
 def _build_subtype_index() -> dict:
@@ -350,12 +346,12 @@ def get_raw_headers_and_rows(path: Path) -> tuple[list[str], list[list]]:
 
 def get_auto_col_map(headers: list[str]) -> dict[str, int | None]:
     return {
-        "ledger": _detect_col(headers, COMMON_LEDGER_HEADERS),
-        "group":  _detect_col(headers, COMMON_GROUP_HEADERS),
-        "debit":  _detect_col(headers, COMMON_DR_HEADERS),
-        "credit": _detect_col(headers, COMMON_CR_HEADERS),
-        "net":    _detect_col(headers, COMMON_NET_HEADERS),
-        "py_net": _detect_col(headers, COMMON_PYNET_HEADERS),
+        "ledger": _detect_columns_num(headers, COMMON_LEDGER_HEADERS),
+        "group":  _detect_columns_num(headers, COMMON_GROUP_HEADERS),
+        "debit":  _detect_columns_num(headers, COMMON_DR_HEADERS),
+        "credit": _detect_columns_num(headers, COMMON_CR_HEADERS),
+        "net":    _detect_columns_num(headers, COMMON_NET_HEADERS),
+        "py_net": _detect_columns_num(headers, COMMON_PYNET_HEADERS),
     }
 
 
@@ -395,25 +391,25 @@ def import_tally_xml(path: Path) -> ImportResult:
     return result
 
 
-def _parse_rows(headers: list[str], data_rows, result: ImportResult, source: str = "XLSX"):
-    lcol  = _detect_col(headers, COMMON_LEDGER_HEADERS)
-    gcol  = _detect_col(headers, COMMON_GROUP_HEADERS)
-    stcol = _detect_col(headers, COMMON_SUBTYPE_HEADERS)
-    dcol  = _detect_col(headers, COMMON_DR_HEADERS)
-    ccol  = _detect_col(headers, COMMON_CR_HEADERS)
-    ncol  = _detect_col(headers, COMMON_NET_HEADERS)
-    pcol  = _detect_col(headers, COMMON_PYNET_HEADERS)
+def _parse_rows(headers: list[str], data_rows, result: ImportResult):
+    ledger_col = _detect_columns_num(headers, COMMON_LEDGER_HEADERS)
+    group_col = _detect_columns_num(headers, COMMON_GROUP_HEADERS)
+    dr_col = _detect_columns_num(headers, COMMON_DR_HEADERS)
+    cr_col = _detect_columns_num(headers, COMMON_CR_HEADERS)
+    net_col = _detect_columns_num(headers, COMMON_NET_HEADERS)
+    pynet_col = _detect_columns_num(headers, COMMON_PYNET_HEADERS)
 
     result.col_map = {
-        "ledger": lcol, "group": gcol, "subtype": stcol, "debit": dcol,
-        "credit": ccol, "net": ncol, "py_net": pcol,
+        "ledger": ledger_col, "group": group_col, "debit": dr_col,
+        "credit": cr_col, "net": net_col, "py_net": pynet_col,
     }
 
-    if lcol is None:
+    if ledger_col is None:
         result.errors.append(
             "Could not detect Ledger column. Please map columns manually."
         )
-        lcol = 0
+        # Fallback: use first column
+        ledger_col = 0
 
     # Build subtype index always — even without explicit SubType column,
     # we can attempt account-name → sub_heading matching as a fallback.
@@ -424,18 +420,17 @@ def _parse_rows(headers: list[str], data_rows, result: ImportResult, source: str
         row = list(row)
         if all((v is None or str(v).strip() == "") for v in row):
             continue
-        name = str(row[lcol] if lcol < len(row) else "").strip()
+        name = str(row[ledger_col] if ledger_col < len(row) else "").strip()
         if not name:
             continue
         if _is_balancing_line(name):
             skipped_balancing += 1
             continue
-        group  = str(row[gcol] if gcol is not None and gcol < len(row) else "").strip()
-        subtyp = str(row[stcol] if stcol is not None and stcol < len(row) else "").strip()
-        dr     = _to_float(row[dcol]) if dcol is not None and dcol < len(row) else 0.0
-        cr     = _to_float(row[ccol]) if ccol is not None and ccol < len(row) else 0.0
-        net    = _to_float(row[ncol]) if ncol is not None and ncol < len(row) else (dr - cr)
-        py     = _to_float(row[pcol]) if pcol is not None and pcol < len(row) else 0.0
+        group = str(row[group_col] if group_col is not None and group_col < len(row) else "").strip()
+        dr    = _to_float(row[dr_col]) if dr_col is not None and dr_col < len(row) else 0.0
+        cr    = _to_float(row[cr_col]) if cr_col is not None and cr_col < len(row) else 0.0
+        net   = _to_float(row[net_col]) if net_col is not None and net_col < len(row) else (dr - cr)
+        py    = _to_float(row[pynet_col]) if pynet_col is not None and pynet_col < len(row) else 0.0
         result.rows.append({
             "ledger_name": name,
             "group_name":  group or subtyp,
@@ -482,14 +477,13 @@ def override_columns(
 
 
 def _parse_rows_with_map(headers, data_rows, result, col_map):
-    lcol  = col_map.get("ledger")
-    gcol  = col_map.get("group")
-    stcol = col_map.get("subtype")
-    dcol  = col_map.get("debit")
-    ccol  = col_map.get("credit")
-    ncol  = col_map.get("net")
-    pcol  = col_map.get("py_net")
-    if lcol is None:
+    ledger_col = col_map.get("ledger")
+    group_col = col_map.get("group")
+    dr_col = col_map.get("debit")
+    cr_col = col_map.get("credit")
+    net_col = col_map.get("net")
+    pynet_col = col_map.get("py_net")
+    if ledger_col is None:
         result.errors.append("Ledger column not mapped")
         return
     # Build subtype index always — even without explicit SubType column,
@@ -498,18 +492,17 @@ def _parse_rows_with_map(headers, data_rows, result, col_map):
     skipped_balancing = 0
     for row in data_rows:
         row = list(row)
-        name = str(row[lcol] if lcol < len(row) else "").strip()
+        name = str(row[ledger_col] if ledger_col < len(row) else "").strip()
         if not name:
             continue
         if _is_balancing_line(name):
             skipped_balancing += 1
             continue
-        group  = str(row[gcol] if gcol is not None and gcol < len(row) else "").strip()
-        subtyp = str(row[stcol] if stcol is not None and stcol < len(row) else "").strip()
-        dr  = _to_float(row[dcol]) if dcol is not None and dcol < len(row) else 0.0
-        cr  = _to_float(row[ccol]) if ccol is not None and ccol < len(row) else 0.0
-        net = _to_float(row[ncol]) if ncol is not None and ncol < len(row) else (dr - cr)
-        py  = _to_float(row[pcol]) if pcol is not None and pcol < len(row) else 0.0
+        group = str(row[group_col] if group_col is not None and group_col < len(row) else "").strip()
+        dr  = _to_float(row[dr_col]) if dr_col is not None and dr_col < len(row) else 0.0
+        cr  = _to_float(row[cr_col]) if cr_col is not None and cr_col < len(row) else 0.0
+        net = _to_float(row[net_col]) if net_col is not None and net_col < len(row) else (dr - cr)
+        py  = _to_float(row[pynet_col]) if pynet_col is not None and pynet_col < len(row) else 0.0
         result.rows.append({
             "ledger_name": name, "group_name": group or subtyp,
             "cy_debit": dr, "cy_credit": cr, "cy_net": net, "py_net": py, "source": "MANUAL",
