@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "mcp__github__get_file_contents",
-      "mcp__github__list_branches"
-    ]
-  }
-}
