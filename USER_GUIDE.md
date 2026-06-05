@@ -1,6 +1,6 @@
 # FinStruct User Guide
 
-**FinStruct v1.1** — Financial Statement Automation for CA/CS Practice
+**FinStruct v2.0** — Financial Statement Automation for CA/CS Practice
 
 This guide walks you through installation, setup, and all 9 workflow steps to generate ICAI-compliant financial statements from your trial balance in minutes.
 
@@ -27,13 +27,13 @@ This guide walks you through installation, setup, and all 9 workflow steps to ge
 ### Installation
 
 1. **Download & Install**
-   - Download `FinStruct_v1.1_dist.zip` (40 MB)
+   - Download `FinStruct_v2.0_dist.zip` (45 MB)
    - Extract the `.zip` file to any location (e.g., `C:\Program Files\FinStruct`)
    - Double-click `FinStruct/FinStruct.exe` to launch
 
 2. **System Requirements**
    - Windows 10 or later (64-bit)
-   - 100 MB free disk space
+   - 120 MB free disk space
    - Administrator privileges (first-run only)
 
 3. **First Run**
@@ -65,28 +65,28 @@ This guide walks you through installation, setup, and all 9 workflow steps to ge
 FinStruct guides you through **9 sequential steps** to generate financial statements from your trial balance:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      FinStruct Workflow                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                                │
-│  Step 1: Entity Setup  ──→  Enter master data                │
-│  Step 2: Import TB     ──→  Load trial balance (xlsx/csv/xml) │
-│  Step 3: Map Ledgers   ──→  Classify ledgers → FS line items  │
-│  Step 4: Review WTB    ──→  Confirm working TB, add adjustments
-│  Step 5: PPE Register  ──→  Calculate depreciation            │
-│  Step 6: Generate FS   ──→  Generate Balance Sheet + P&L      │
-│  Step 7: Notes         ──→  Auto-populate Notes to Accounts   │
-│  Step 8: Reports       ──→  Edit Directors' + Audit Reports   │
-│  Step 9: Export        ──→  Output PDF / Excel / Word         │
-│                                                                │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                      FinStruct Workflow                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Step 1: Entity Setup  ──→  Enter master data                   │
+│  Step 2: Import TB     ──→  Load trial balance (xlsx/csv/xml)   │
+│  Step 3: Map Ledgers   ──→  Classify ledgers → FS line items    │
+│  Step 4: Review WTB    ──→  Confirm working TB, add adjustments |
+│  Step 5: PPE Register  ──→  Calculate depreciation              │
+│  Step 6: Generate FS   ──→  Generate Balance Sheet + P&L        │
+│  Step 7: Notes         ──→  Auto-populate Notes to Accounts     │
+│  Step 8: Reports       ──→  Edit Directors' + Audit Reports     │
+│  Step 9: Export        ──→  Output PDF / Excel / Word           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 **Key Outputs by Step:**
 - **Step 2:** Working Trial Balance (WTB) raw data
 - **Step 4:** WTB after mapping + adjustments
 - **Step 6:** Balance Sheet, P&L (or I&E for non-company entities)
-- **Step 7:** 15–29 Notes to Accounts (auto-calculated)
+- **Step 7:** 15–29 Notes to Accounts (auto-calculated & paginated)
 - **Step 9:** Final PDF (filing-ready), Excel (for edits), Word (reports)
 
 ---
@@ -429,77 +429,33 @@ Please map the following columns manually:
 
 ## Advanced Features
 
-### Project Rollover (Next Financial Year)
+### Smart Project Rollover (Next FY)
+**What it does:** Copies current project to next year, carrying forward:
+- **ALL Master Details** (Entity info, Auditor, Directors)
+- Prior-Year (PY) balances from current year (CY)
+- Learned ledger mappings
+- PPE closing balances → opening balances
+- **Auto-incrementing Financial Year** (e.g., 2024-25 → 2025-26)
 
-**What it does:** Copy current project to next FY, automatically carrying forward:
-- Prior-Year (PY) balances from current year (CY) become next year's PY
-- Learned ledger mappings (so re-mapping is faster)
-- PPE opening balances (from prior closing)
-- Entity master data (same company details)
+**How to use:** Menu: **Project → Rollover to Next FY**.
 
-**When to use:** At year-end, after finalizing current FY project.
+### Dashboard Enhancements
+- **Text Wrapping:** Long entity names and paths now wrap automatically in the recent projects list.
+- **Delete from Disk:** Permanently delete a project folder and its `.finstruct` file directly from the dashboard.
+- **Folder Deletion:** Use the "Delete from list" button (red) to wipe a project folder entirely.
 
-**How to use:**
-1. Open completed project for FY 2024-25
-2. Menu: **Project → Rollover to Next FY**
-3. Enter new FY (e.g., 2025-26) in dialog
-4. Click **Rollover**
-5. New project created at: `~/Documents/FinStruct/Projects/[EntityName]_2025-26/`
-6. Opens automatically; ready for Step 2 (Import TB for new FY)
-
-**Key Points:**
-- Mappings from 2024-25 are pre-loaded in 2025-26, saving time
-- CY balances become PY; CY is zeroed for data entry
-- PPE assets carry over with closing values as opening values
-
-### Project Lock & Audit Trail
-
-**Lock a Project** (finalize to read-only):
-- Menu: **Project → Lock / Finalize Project**
-- Confirms: "No further edits allowed after lock."
-- Click **Lock** → project becomes read-only
-- Timestamp logged in Audit Log
-
-**Use case:** After client approval + filing, lock to prevent accidental changes.
-
-**Audit Trail:**
-- Menu: **Project → Audit Log**
-- View all actions: Create, Import, Generate, Export, Lock, Rollover
-- Timestamp + action details
-- Useful for compliance + review
-
-### Validation
-
-**Manual Validation** (anytime during workflow):
-- Click **Validate** or press **F9**
-- Checks:
-  - ✓ All ledgers mapped + confirmed
-  - ✓ Balance Sheet balanced (debit = credit, within rounding)
-  - ✓ Prior Year balances consistent
-
-**Issues Found:** Warnings/errors shown in dialog. Fix and re-validate.
-
-### Claude API Integration (Optional)
-
-**What it does:** Use Claude AI to auto-resolve unmapped or low-confidence ledgers. Useful for large TBs (500+ ledgers).
-
-**To Enable:**
-1. Menu: **Help → About** (or Settings, depending on version)
-2. Enter your Anthropic API key (from https://console.anthropic.com/)
-3. Click **Save**
-4. Return to Mapping (Step 3) → bottom button "Resolve with Claude"
-5. Select unmapped/red ledgers → click **Resolve**
-6. Claude suggests codes; review + confirm
-
-**Cost:** $0.01–0.05 per resolution (via Anthropic API usage)  
-**No Internet:** App works fully offline. Claude integration is optional.
+### Multi-Provider AI Assistance
+FinStruct now supports multiple AI providers for ledger mapping:
+- **Claude (Anthropic)**
+- **OpenAI (GPT-4o)**
+- **Gemini (Google)**
+Configure your preferred provider and API keys via **Help → AI Assistance Settings**.
 
 ---
 
 ## Best Practices for Multiple Projects
 
 ### Folder Structure
-
 **Recommended:**
 ```
 ~/Documents/FinStruct/Projects/
@@ -675,19 +631,18 @@ Please map the following columns manually:
 
 | Shortcut | Action | When to Use |
 |----------|--------|------------|
-| **Ctrl+N** | New Project | Create new client/FY project |
-| **Ctrl+O** | Open Project | Switch between recent projects |
-| **Ctrl+S** | Save | Manual save (auto-saves anyway) |
-| **F1** | Help / About | View app version + info |
-| **F5** | Generate FS | Re-generate FS after edits (Steps 5–8) |
-| **F9** | Validate | Check balance + mapping completeness |
-| **F10** | Go to Notes | Jump to Step 7 (Notes) |
-| **F12** | Export | Open export dialog (Step 9) |
-| **Alt+E** | Go to Entity | Jump to Step 1 (Entity Setup) |
-| **Alt+M** | Go to Mapping | Jump to Step 3 (Ledger Mapping) |
-| **Alt+W** | Go to WTB | Jump to Step 4 (Review WTB) |
-| **Alt+A** | Go to Assets | Jump to Step 5 (PPE Register) |
-| **Alt+B** | Go to Balance Sheet | Jump to Step 6 (Generate FS) |
+| **Ctrl+N** | New Project | Create new project |
+| **Ctrl+O** | Open Project | Open existing file |
+| **F5** | Generate FS | Re-calculate statements |
+| **F9** | Validate | Check balance & mapping |
+| **F10** | Go to Notes | Jump to Step 7 |
+| **F12** | Export | Open export dialog |
+| **Alt+M** | Go to Mapping | Jump to Step 3 |
+| **Alt+W** | Go to WTB | Jump to Step 4 |
+| **Alt+A** | Go to PPE | Jump to Step 5 |
+| **Alt+B / Alt+P** | Go to FS | Jump to Step 6 |
+| **Alt+N** | Go to Notes | Jump to Step 7 |
+| **Alt+E** | Export Dialog | Jump to Step 9 |
 
 ---
 
@@ -846,46 +801,46 @@ Total PPE (Net Block) | —             | —            | 73,75,000
 Click **Generate FS** → 3 seconds later:
 
 ```
-┌──────────────────────────────────────────┐
-│  ABC LIMITED - BALANCE SHEET              │
-│  As at 31st March, 2025                   │
-│  (₹ unless otherwise stated)              │
-├──────────────────────────────────────────┤
-│ EQUITY & LIABILITIES              CY  PY │
-├──────────────────────────────────────────┤
-│ I. Shareholders' Funds                   │
-│    Share Capital (Note 3)        10,00,000 │
-│    Reserves & Surplus (Note 4)  2,85,00,000 │
-│    Sub-total (A)                2,95,00,000 │
-│                                            │
-│ II. Non-Current Liabilities                │
-│     Long-term Borrowings (Note 5) 50,00,000 │
-│     Sub-total (B)                 50,00,000 │
-│                                            │
-│ III. Current Liabilities                   │
-│      Trade Payables (Note 9)     1,20,00,000 │
-│      Other Current Liab (Note 10) 35,00,000 │
-│      Short-term Provisions          10,010 │
-│      Sub-total (C)               1,55,00,010 │
-│                                            │
+┌────────────────────────────────────────────────┐
+│  ABC LIMITED - BALANCE SHEET                   │
+│  As at 31st March, 2025                        │
+│  (₹ unless otherwise stated)                   │
+├────────────────────────────────────────────────┤
+│ EQUITY & LIABILITIES              CY  PY       │
+├────────────────────────────────────────────────┤
+│ I. Shareholders' Funds                         │
+│    Share Capital (Note 3)        10,00,000     │
+│    Reserves & Surplus (Note 4)  2,85,00,000    │
+│    Sub-total (A)                2,95,00,000    │
+│                                                │
+│ II. Non-Current Liabilities                    │
+│     Long-term Borrowings (Note 5) 50,00,000    │
+│     Sub-total (B)                 50,00,000    │
+│                                                │
+│ III. Current Liabilities                       │
+│      Trade Payables (Note 9)     1,20,00,000   │
+│      Other Current Liab (Note 10) 35,00,000    │
+│      Short-term Provisions          10,010     │
+│      Sub-total (C)               1,55,00,010   │
+│                                                │
 │ TOTAL EQUITY & LIABILITIES (A+B+C) 5,00,00,010 │
-├──────────────────────────────────────────┤
-│ ASSETS                           CY     PY │
-├──────────────────────────────────────────┤
-│ I. Non-Current Assets                    │
-│    Fixed Assets (Note 12)       73,75,000 │
-│    Non-Current Inv (Note 13)     8,50,000 │
-│    Sub-total (D)                82,25,000 │
-│                                            │
-│ II. Current Assets                        │
-│     Inventories                 10,00,000 │
-│     Trade Receivables (Note 17) 2,80,00,000 │
-│     Cash & Equivalents (Note 18) 1,35,00,000 │
-│     Other Current Assets         2,75,010 │
-│     Sub-total (E)              4,27,75,010 │
-│                                            │
-│ TOTAL ASSETS (D+E)              5,10,00,010 │
-└──────────────────────────────────────────┘
+├────────────────────────────────────────────────┤
+│ ASSETS                           CY     PY     │
+├────────────────────────────────────────────────┤
+│ I. Non-Current Assets                          │
+│    Fixed Assets (Note 12)       73,75,000      │
+│    Non-Current Inv (Note 13)     8,50,000      │
+│    Sub-total (D)                82,25,000      │
+│                                                │
+│ II. Current Assets                             │
+│     Inventories                 10,00,000      │
+│     Trade Receivables (Note 17) 2,80,00,000    │
+│     Cash & Equivalents (Note 18) 1,35,00,000   │
+│     Other Current Assets         2,75,010      │
+│     Sub-total (E)              4,27,75,010     │
+│                                                │
+│ TOTAL ASSETS (D+E)              5,10,00,010    │
+└────────────────────────────────────────────────┘
 ```
 
 **P&L:** Generated with 29 notes auto-populated.
