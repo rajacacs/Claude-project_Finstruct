@@ -5,35 +5,72 @@ NCE config files (PROP, PART, AOP, NPO entity types).
 """
 
 from __future__ import annotations
+from collections.abc import Iterable
 from dataclasses import dataclass, field
+from types import MappingProxyType
+from typing import Literal
 
 
-@dataclass
+from core.entity_types import EntityType
+
+FsTag = Literal["BS", "PL", "IE", "RP"]
+SignConvention = Literal["DR_POSITIVE", "CR_POSITIVE"]
+
+VALID_ENTITY_TYPES = frozenset(et.value for et in EntityType)
+VALID_ENTITY_TAGS = VALID_ENTITY_TYPES | {"ALL", "NCE", "NPO"}
+VALID_FS_TAGS = frozenset({"BS", "PL", "IE", "RP"})
+VALID_SIGNS = frozenset({"DR_POSITIVE", "CR_POSITIVE"})
+
+
+@dataclass(frozen=True, slots=True)
 class MappingEntry:
     code: str
-    entity_types: list[str]   # ["COMPANY","SEC8"] or ["ALL"] or ["NCE",...]
+    entity_types: tuple[str, ...]   # ("COMPANY","SEC8") or ("ALL",) or ("NCE",...)
     group: str
     heading: str
     sub_heading: str
-    fs_tag: str               # BS | PL | IE | RP
-    sign: str                 # DR_POSITIVE | CR_POSITIVE
+    fs_tag: FsTag             # BS | PL | IE | RP
+    sign: SignConvention      # DR_POSITIVE | CR_POSITIVE
     note_number: int | None
     small_co_exempt: bool
+    parent_code: str | None = None  # Added for hierarchy
     lookup_name: str = field(init=False)
 
     def __post_init__(self):
-        self.lookup_name = f"{self.group} > {self.heading} > {self.sub_heading}"
+        object.__setattr__(self, "code", self.code.strip().upper())
+        object.__setattr__(self, "entity_types", tuple(dict.fromkeys(self.entity_types)))
+        object.__setattr__(self, "group", self.group.strip())
+        object.__setattr__(self, "heading", self.heading.strip())
+        object.__setattr__(self, "sub_heading", self.sub_heading.strip())
+        object.__setattr__(self, "fs_tag", self.fs_tag.strip().upper())
+        object.__setattr__(self, "sign", self.sign.strip().upper())
+        object.__setattr__(
+            self,
+            "lookup_name",
+            f"{self.group} > {self.heading} > {self.sub_heading}",
+        )
 
 
-def _e(code, types, grp, hdg, sub, tag, sign="DR_POSITIVE", note=None, sc_exempt=False):
-    return MappingEntry(code, types, grp, hdg, sub, tag, sign, note, sc_exempt)
+def _e(
+    code: str,
+    types: Iterable[str],
+    grp: str,
+    hdg: str,
+    sub: str,
+    tag: FsTag,
+    sign: SignConvention = "DR_POSITIVE",
+    note: int | None = None,
+    sc_exempt: bool = False,
+    parent: str | None = None,
+) -> MappingEntry:
+    return MappingEntry(code, tuple(types), grp, hdg, sub, tag, sign, note, sc_exempt, parent)
 
 
-CO  = ["COMPANY", "SEC8"]
-NCE = ["LLP", "PROP", "PART"]
-AOP = ["AOP"]
-NPO = ["TRUST"]
-ALL = ["COMPANY", "LLP", "PROP", "PART", "AOP", "TRUST", "SEC8"]
+CO  = [EntityType.COMPANY.value, EntityType.SEC8.value]
+NCE = [EntityType.LLP.value, EntityType.PROP.value, EntityType.PART.value]
+AOP = [EntityType.AOP.value]
+NPO = [EntityType.TRUST.value]
+ALL = [et.value for et in EntityType]
 
 
 MASTER: list[MappingEntry] = [
@@ -335,22 +372,66 @@ MASTER: list[MappingEntry] = [
 ]
 
 
+def validate_master(entries: Iterable[MappingEntry] = MASTER) -> list[str]:
+    """Return schema/data-quality errors for a taxonomy collection."""
+    errors: list[str] = []
+    seen: set[str] = set()
+
+    for entry in entries:
+        prefix = f"{entry.code}: "
+        if not entry.code:
+            errors.append("blank mapping code")
+        elif entry.code in seen:
+            errors.append(f"duplicate mapping code {entry.code}")
+        seen.add(entry.code)
+
+        if not entry.entity_types:
+            errors.append(prefix + "missing entity_types")
+        else:
+            invalid_tags = sorted(set(entry.entity_types) - VALID_ENTITY_TAGS)
+            if invalid_tags:
+                errors.append(prefix + f"invalid entity type tags {invalid_tags}")
+
+        if entry.fs_tag not in VALID_FS_TAGS:
+            errors.append(prefix + f"invalid fs_tag {entry.fs_tag!r}")
+        if entry.sign not in VALID_SIGNS:
+            errors.append(prefix + f"invalid sign convention {entry.sign!r}")
+        if entry.note_number is not None and entry.note_number <= 0:
+            errors.append(prefix + f"invalid note_number {entry.note_number!r}")
+        if not all((entry.group, entry.heading, entry.sub_heading)):
+            errors.append(prefix + "group, heading and sub_heading are required")
+
+    return errors
+
+
+_MASTER_ERRORS = validate_master(MASTER)
+if _MASTER_ERRORS:
+    raise ValueError("Invalid mapping master:\n- " + "\n- ".join(_MASTER_ERRORS))
+
+_LOOKUP_MAP = MappingProxyType({m.code: m for m in MASTER})
+
+
 def get_master(entity_types_filter: list[str] | None = None) -> list[MappingEntry]:
     """Return master entries filtered by entity type tags."""
     if not entity_types_filter:
         return MASTER
     s = set(entity_types_filter)
-    return [m for m in MASTER if s.intersection(m.entity_types)]
+    return [m for m in MASTER if s.intersection(m.entity_types) or "ALL" in m.entity_types]
 
 
 def get_lookup_map() -> dict[str, MappingEntry]:
     """code → MappingEntry for fast lookup."""
-    return {m.code: m for m in MASTER}
+    return dict(_LOOKUP_MAP)
 
 
-def get_group_tree(entity_types_filter: list[str] | None = None) -> dict:
+def get_entry(code: str) -> MappingEntry | None:
+    """Return a single mapping entry by code."""
+    return _LOOKUP_MAP.get(code.strip().upper())
+
+
+def get_group_tree(entity_types_filter: list[str] | None = None) -> dict[str, dict[str, list[str]]]:
     """Build hierarchical {group: {heading: [sub_headings]}} dict."""
-    tree: dict = {}
+    tree: dict[str, dict[str, list[str]]] = {}
     for m in get_master(entity_types_filter):
         tree.setdefault(m.group, {}).setdefault(m.heading, [])
         if m.sub_heading not in tree[m.group][m.heading]:
