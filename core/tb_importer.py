@@ -31,6 +31,12 @@ BALANCING_LINE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+# Rows with these ledger names should be skipped during import (usually footers/totals)
+EXCLUDE_LEDGERS = {
+    "— check totals —", "check totals", "total", "grand total", "totals", 
+    "— total —", "subtotal", "sub-total"
+}
+
 
 def _normalise(s: str) -> str:
     s = (s or "").lower()
@@ -237,7 +243,7 @@ def import_finstruct_template(path: Path, entity_type: str) -> ImportResult:
         if all((v is None or str(v).strip() == "") for v in row):
             continue
         ledger = str(row[0] if row else "").strip()
-        if not ledger:
+        if not ledger or ledger.lower() in EXCLUDE_LEDGERS:
             continue
         mapping = str(row[1] if len(row) > 1 else "").strip()
 
@@ -421,7 +427,7 @@ def _parse_rows(headers: list[str], data_rows, result: ImportResult):
         if all((v is None or str(v).strip() == "") for v in row):
             continue
         name = str(row[ledger_col] if ledger_col < len(row) else "").strip()
-        if not name:
+        if not name or name.lower() in EXCLUDE_LEDGERS:
             continue
         if _is_balancing_line(name):
             skipped_balancing += 1
@@ -493,7 +499,7 @@ def _parse_rows_with_map(headers, data_rows, result, col_map):
     for row in data_rows:
         row = list(row)
         name = str(row[ledger_col] if ledger_col < len(row) else "").strip()
-        if not name:
+        if not name or name.lower() in EXCLUDE_LEDGERS:
             continue
         if _is_balancing_line(name):
             skipped_balancing += 1
