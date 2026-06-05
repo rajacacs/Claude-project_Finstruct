@@ -20,6 +20,10 @@ class NotesView(ttk.Frame):
         super().__init__(parent)
         self._notes = notes or []
         self._db    = db
+        self._page_size = 5
+        self._current_page = 0
+        self._grids: dict[int, EditableGrid] = {}
+        self._note_frames: list[ttk.Frame] = []
         # Derive FY labels
         self._fy_labels = self._derive_fy_labels()
         self._build()
@@ -57,14 +61,61 @@ class NotesView(ttk.Frame):
                      style="Muted.TLabel", wraplength=400, justify="left").pack(anchor="w", pady=20)
             return
 
-        nb = ttk.Notebook(self)
-        nb.pack(fill="both", expand=True, padx=8, pady=4)
+        self._nb = ttk.Notebook(self)
+        self._nb.pack(fill="both", expand=True, padx=8, pady=4)
 
-        self._grids: dict[int, EditableGrid] = {}
+        self._prev_frame = ttk.Frame(self._nb)
+        self._next_frame = ttk.Frame(self._nb)
+
+        self._grids = {}
+        self._note_frames = []
         for note in self._notes:
-            frame = ttk.Frame(nb)
-            nb.add(frame, text=f"Note {note.number}")
+            frame = ttk.Frame(self._nb)
             self._build_note_tab(frame, note)
+            self._note_frames.append(frame)
+
+        self._update_tabs()
+
+    def _update_tabs(self, select_index=None):
+        """Rebuild the visible tabs based on current page."""
+        self._nb.unbind("<<NotebookTabChanged>>")
+        for tab in self._nb.tabs():
+            self._nb.forget(tab)
+
+        start = self._current_page * self._page_size
+        end = start + self._page_size
+
+        if self._current_page > 0:
+            self._nb.add(self._prev_frame, text="« Prev")
+
+        for i in range(start, min(end, len(self._notes))):
+            self._nb.add(self._note_frames[i], text=f"Note {self._notes[i].number}")
+
+        if end < len(self._notes):
+            self._nb.add(self._next_frame, text="Next »")
+
+        if select_index is not None:
+            try:
+                self._nb.select(select_index)
+            except tk.TclError:
+                self._nb.select(0)
+        else:
+            idx = 1 if self._current_page > 0 else 0
+            self._nb.select(idx)
+
+        self._nb.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+
+    def _on_tab_changed(self, event):
+        sel = self._nb.select()
+        if not sel: return
+        txt = self._nb.tab(sel, "text")
+        if txt == "« Prev":
+            self._current_page -= 1
+            target = self._page_size if self._current_page > 0 else self._page_size - 1
+            self._update_tabs(select_index=target)
+        elif txt == "Next »":
+            self._current_page += 1
+            self._update_tabs(select_index=1)
 
     def _build_note_tab(self, parent, note: Note):
         ttk.Label(parent, text=f"Note {note.number}: {note.title}",
