@@ -80,6 +80,9 @@ class ProjectDB:
             py_net REAL DEFAULT 0,
             is_confirmed INTEGER DEFAULT 0
         );
+        -- Cleanup duplicates if any exist from previous bug
+        DELETE FROM wtb WHERE id NOT IN (SELECT MIN(id) FROM wtb GROUP BY raw_tb_id);
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_wtb_raw_id ON wtb(raw_tb_id);
         CREATE TABLE IF NOT EXISTS adjustments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             adj_id TEXT UNIQUE,

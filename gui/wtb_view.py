@@ -78,7 +78,7 @@ class WTBView(ttk.Frame):
                 py_s = f"{ln.py_net:,.2f}" if ln.py_net else "—"
                 tag = "alt" if i % 2 else ""
                 grid_rows.append({
-                    "iid": str(ln.raw_tb_id),
+                    "iid": str(ln.wtb_id),
                     "tag": tag,
                     "values": [group, heading, ln.ledger_name,
                                ln.mapping_code, cy_s, py_s, fs_tag],

@@ -5,11 +5,13 @@ Ported from Engine_WTB.gs logic.
 
 from __future__ import annotations
 from dataclasses import dataclass, field
+from typing import Any
 from core.master_db import get_lookup_map, MappingEntry
 
 
 @dataclass
 class WTBLine:
+    wtb_id: int
     raw_tb_id: int
     ledger_name: str
     group_name: str
@@ -38,17 +40,22 @@ def build_wtb_lines(wtb_rows, raw_tb_rows) -> list[WTBLine]:
     raw_map = {r["id"]: r for r in raw_tb_rows if "id" in r}
     lines = []
     
-    for w in wtb_rows:
+    for row in wtb_rows:
         try:
+            # sqlite3.Row does not have .get(), convert to dict for resilience
+            w = dict(row) if not isinstance(row, dict) else row
+            
             raw_id = w.get("raw_tb_id")
             if raw_id is None:
                 continue
                 
-            raw = raw_map.get(raw_id)
+            raw_data = raw_map.get(raw_id)
+            raw = dict(raw_data) if raw_data and not isinstance(raw_data, dict) else raw_data
             m_code = w.get("mapping_code")
             entry = lookup.get(m_code) if m_code else None
             
             lines.append(WTBLine(
+                wtb_id       = int(w.get("id") or 0),
                 raw_tb_id    = raw_id,
                 ledger_name  = (raw["ledger_name"] if raw and "ledger_name" in raw else "Unknown Ledger"),
                 group_name   = (raw["group_name"] if raw and "group_name" in raw else ""),
@@ -151,8 +158,9 @@ def validate_balance(
     )
 
 
-def compute_net_from_raw(row: dict, sign: str) -> float:
+def compute_net_from_raw(row_obj: Any, sign: str) -> float:
     """Apply sign convention: DR_POSITIVE → cy_debit - cy_credit."""
+    row = dict(row_obj) if not isinstance(row_obj, dict) else row_obj
     dr = float(row.get("cy_debit", 0) or 0)
     cr = float(row.get("cy_credit", 0) or 0)
     net = float(row.get("cy_net", 0) or 0)
