@@ -33,7 +33,7 @@ def main():
     except Exception:
         pass
 
-    from finstruct.gui.main_window import MainWindow
+    from gui.main_window import MainWindow
     app = MainWindow(root)          # noqa: F841
 
     root.protocol("WM_DELETE_WINDOW", root.quit)

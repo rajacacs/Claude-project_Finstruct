@@ -6,13 +6,12 @@ from tkinter import ttk, filedialog, messagebox
 import threading
 from pathlib import Path
 from datetime import datetime
-from ..config import THEME as T
-from ..gui.theme import primary_btn, secondary_btn, label
-from ..core.fs_engine import FSEngine, FSDocument
-from ..core.notes_engine import NotesEngine
-from ..core.wtb_engine import aggregate_by_code, apply_adjustments, build_wtb_lines
-from ..core.master_db import get_lookup_map
-from ..core.ppe_engine import recalc_asset
+from config import THEME as T
+from gui.theme import primary_btn, secondary_btn, label
+from core.fs_engine import FSEngine, FSDocument
+from core.notes_engine import NotesEngine
+from core.wtb_engine import aggregate_by_code, build_wtb_lines
+from core.ppe_engine import recalc_asset
 
 
 def _safe_name(s: str) -> str:
@@ -182,18 +181,18 @@ class ExportDialog(tk.Toplevel):
 
             if self._do_pdf.get():
                 self.after(0, lambda: self._status_var.set("Generating PDF …"))
-                from ..export.pdf_exporter import export_pdf
+                from export.pdf_exporter import export_pdf
                 export_pdf(doc, notes, folder / f"{stem}_FS.pdf",
                            is_draft=is_draft, db=self._db)
 
             if self._do_xlsx.get():
                 self.after(0, lambda: self._status_var.set("Generating XLSX …"))
-                from ..export.xlsx_exporter import export_xlsx
+                from export.xlsx_exporter import export_xlsx
                 export_xlsx(doc, notes, folder / f"{stem}_FS.xlsx")
 
             if self._do_docx.get():
                 self.after(0, lambda: self._status_var.set("Generating DOCX …"))
-                from ..export.docx_exporter import export_docx
+                from export.docx_exporter import export_docx
                 export_docx(
                     em, folder / f"{stem}_Reports.docx",
                     directors_report_text=self._rtexts.get("directors"),

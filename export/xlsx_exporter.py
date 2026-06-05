@@ -7,8 +7,8 @@ from openpyxl.styles import (
     Font, PatternFill, Alignment, Border, Side, numbers
 )
 from openpyxl.utils import get_column_letter
-from ..core.fs_engine import FSDocument, FSLine
-from ..core.notes_engine import Note
+from core.fs_engine import FSDocument, FSLine
+from core.notes_engine import Note
 
 # NSE/BSE listed-company neutral grey palette
 P_HDR_BG   = "FF333333"   # Dark grey headers

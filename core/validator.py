@@ -30,7 +30,7 @@ def validate_mapping_complete(wtb_rows) -> ValidationReport:
 
 def validate_balance(totals: dict[str, tuple[float, float]],
                      entity_type: str) -> ValidationReport:
-    from .master_db import get_lookup_map
+    from core.master_db import get_lookup_map
     r = ValidationReport()
     lm = get_lookup_map()
     bs_cy = bs_py = 0.0

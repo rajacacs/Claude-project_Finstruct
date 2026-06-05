@@ -6,8 +6,8 @@ from pathlib import Path
 from datetime import datetime
 from contextlib import contextmanager
 
-from ..config import SETTINGS_DB
-from .encryption import encrypt, decrypt
+from config import SETTINGS_DB
+from data.encryption import encrypt, decrypt
 
 
 class SettingsDB:

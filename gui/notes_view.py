@@ -3,11 +3,11 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
-from ..config import THEME as T
-from ..core.notes_engine import Note
-from ..core.fs_engine import FSLine
-from ..gui.theme import label, primary_btn, secondary_btn
-from .fs_grid_view import EditableGrid
+from config import THEME as T
+from core.notes_engine import Note
+from core.fs_engine import FSLine
+from gui.theme import label, primary_btn, secondary_btn
+from gui.fs_grid_view import EditableGrid
 
 
 def _fmt(v):

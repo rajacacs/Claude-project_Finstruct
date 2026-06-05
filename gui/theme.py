@@ -1,8 +1,8 @@
-"""MS Office–inspired theme — design tokens + widget factories."""
+"""MS Office - inspired theme — design tokens + widget factories."""
 
 import tkinter as tk
 from tkinter import ttk
-from ..config import THEME as T
+from config import THEME as T
 
 
 def apply_theme(root: tk.Tk):

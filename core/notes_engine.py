@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from .fs_engine import FSLine, _line, _sec, _hdr, _tot, _grand, _blank
+from core.fs_engine import FSLine, _line, _sec, _hdr, _tot, _grand, _blank
 
 
 @dataclass

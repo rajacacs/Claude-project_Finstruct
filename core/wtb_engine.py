@@ -5,7 +5,7 @@ Ported from Engine_WTB.gs logic.
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from .master_db import get_lookup_map, MappingEntry
+from core.master_db import get_lookup_map, MappingEntry
 
 
 @dataclass
@@ -73,7 +73,7 @@ def apply_adjustments(
 ) -> dict[str, tuple[float, float]]:
     """Fold adjustment journal entries (dr/cr) into CY totals by mapping_code."""
     if lookup is None:
-        from .master_db import get_lookup_map
+        from core.master_db import get_lookup_map
         lookup = get_lookup_map()
     result: dict[str, list[float]] = {k: list(v) for k, v in totals.items()}
     for adj in adj_rows:
@@ -95,7 +95,7 @@ def validate_balance(
     entity_type: str,
 ) -> ValidationResult:
     """Check BS balance and P&L tie-out."""
-    from .master_db import MASTER
+    from core.master_db import MASTER
 
     lookup = get_lookup_map()
     bs_cy = 0.0

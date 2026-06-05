@@ -3,10 +3,10 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ..config import THEME as T
-from ..gui.theme import primary_btn, secondary_btn, label
-from ..core.wtb_engine import build_wtb_lines, aggregate_by_code, validate_balance
-from .fs_grid_view import EditableGrid
+from config import THEME as T
+from gui.theme import primary_btn, secondary_btn, label
+from core.wtb_engine import build_wtb_lines, aggregate_by_code, validate_balance
+from gui.fs_grid_view import EditableGrid
 
 
 class WTBView(ttk.Frame):
@@ -65,7 +65,7 @@ class WTBView(ttk.Frame):
             return
 
         lines    = build_wtb_lines(wtb_rows, raw_rows)
-        from ..core.master_db import get_lookup_map
+        from core.master_db import get_lookup_map
         lm = get_lookup_map()
         grid_rows = []
         for i, ln in enumerate(lines):

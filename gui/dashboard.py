@@ -5,9 +5,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from pathlib import Path
 from datetime import datetime
-from ..config import THEME as T, PROJECTS_DIR
-from ..core.entity_types import EntityType, ENTITY_LABELS
-from ..gui.theme import primary_btn, secondary_btn, label, card
+from config import THEME as T, PROJECTS_DIR
+from core.entity_types import EntityType, ENTITY_LABELS
+from gui.theme import primary_btn, secondary_btn, label, card
 
 
 class Dashboard(ttk.Frame):
@@ -167,7 +167,7 @@ class NewProjectDialog(tk.Toplevel):
 
         if not name:
             messagebox.showerror("Error", "Entity Name is required."); return
-        from ..core.validator import validate_fy
+        from core.validator import validate_fy
         if not validate_fy(fy):
             messagebox.showerror("Error", "FY format must be YYYY-YY (e.g. 2024-25)."); return
 
@@ -177,7 +177,7 @@ class NewProjectDialog(tk.Toplevel):
         folder.mkdir(parents=True, exist_ok=True)
         proj_path = folder / f"{safe}_{fy}.finstruct"
 
-        from ..data.project_db import ProjectDB
+        from data.project_db import ProjectDB
         db = ProjectDB(proj_path)
         db.connect()
         db.set_meta("entity_type", etype)

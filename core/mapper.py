@@ -4,10 +4,10 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from .master_db import MASTER, MappingEntry
+from core.master_db import MASTER, MappingEntry
 
 if TYPE_CHECKING:
-    from ..data.settings_db import SettingsDB
+    from data.settings_db import SettingsDB
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class Mapper:
         self._build_corpus()
 
     def _build_corpus(self):
-        from .entity_types import MASTER_TAGS, EntityType
+        from core.entity_types import MASTER_TAGS, EntityType
         try:
             et = EntityType(self._etype)
             tags = MASTER_TAGS.get(et, ["ALL"])
@@ -69,7 +69,7 @@ class Mapper:
         if self._sbert is None:
             try:
                 from sentence_transformers import SentenceTransformer
-                from ..config import MODELS_DIR
+                from config import MODELS_DIR
                 model_path = MODELS_DIR / "all-MiniLM-L6-v2"
                 self._sbert = SentenceTransformer(str(model_path) if model_path.exists() else "all-MiniLM-L6-v2")
                 self._sbert_corpus_emb = self._sbert.encode(self._corpus, convert_to_numpy=True)

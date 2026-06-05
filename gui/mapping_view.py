@@ -4,10 +4,10 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
 import threading
-from ..config import THEME as T
-from ..core.mapper import Mapper, CONF_GREEN, CONF_YELLOW
-from ..core.master_db import get_group_tree, get_lookup_map
-from ..gui.theme import primary_btn, secondary_btn, label
+from config import THEME as T
+from core.mapper import Mapper, CONF_GREEN, CONF_YELLOW
+from core.master_db import get_group_tree, get_lookup_map
+from gui.theme import primary_btn, secondary_btn, label
 
 
 class MappingView(ttk.Frame):
@@ -49,7 +49,7 @@ class MappingView(ttk.Frame):
             ("cy",       "CY Amount ₹",                110, "e"),
             ("py",       "PY Amount ₹",                110, "e"),
         ]
-        from .fs_grid_view import EditableGrid
+        from gui.fs_grid_view import EditableGrid
         self._grid = EditableGrid(self, columns=cols,
                                   on_cell_change=self._on_cell_change,
                                   editable_cols={"py"})

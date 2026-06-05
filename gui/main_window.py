@@ -4,12 +4,11 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
 from pathlib import Path
-from ..config import THEME as T, APP_NAME, APP_VERSION
-from ..data.project_db import ProjectDB
-from ..data.settings_db import SettingsDB
-from ..gui.theme import apply_theme, primary_btn, secondary_btn, label, sidebar_btn
-from ..gui.dashboard import Dashboard
-
+from config import THEME as T, APP_NAME, APP_VERSION
+from data.project_db import ProjectDB
+from data.settings_db import SettingsDB
+from gui.theme import apply_theme, primary_btn, secondary_btn, label, sidebar_btn
+from gui.dashboard import Dashboard
 
 STEPS = [
     ("1", "Entity Setup"),
@@ -214,7 +213,7 @@ class MainWindow:
 
     def _open_project(self):
         from tkinter import filedialog
-        from ..config import PROJECTS_DIR
+        from config import PROJECTS_DIR
         path = filedialog.askopenfilename(
             title="Open Project",
             filetypes=[("FinStruct Project","*.finstruct"),("All","*.*")],
@@ -233,8 +232,8 @@ class MainWindow:
         new_fy = askstring("Rollover", f"New Financial Year:", initialvalue=new_fy_default)
         if not new_fy:
             return
-        from ..core.rollover import rollover_project
-        from ..config import PROJECTS_DIR
+        from core.rollover import rollover_project
+        from config import PROJECTS_DIR
         old_path = self._db.path
         name = self._db.get_entity("entity_name") or old_path.stem.split("_")[0]
         safe = "".join(c if c.isalnum() or c in " _-" else "_" for c in name).strip()
@@ -278,7 +277,7 @@ class MainWindow:
     def _show_entity(self):
         self._clear_content()
         self._highlight_step(0)
-        from .company_master import CompanyMasterForm
+        from gui.company_master import CompanyMasterForm
         f = CompanyMasterForm(self._content, self._db,
                               on_save=lambda _: self._status_var.set("Entity master saved."))
         f.pack(fill="both", expand=True)
@@ -286,7 +285,7 @@ class MainWindow:
     def _show_tb_import(self):
         self._clear_content()
         self._highlight_step(1)
-        from .tb_import_view import TBImportView
+        from gui.tb_import_view import TBImportView
         f = TBImportView(self._content, self._db,
                          on_complete=lambda: self._go_step(2))
         f.pack(fill="both", expand=True)
@@ -294,7 +293,7 @@ class MainWindow:
     def _show_mapping(self):
         self._clear_content()
         self._highlight_step(2)
-        from .mapping_view import MappingView
+        from gui.mapping_view import MappingView
         et = self._db.get_meta("entity_type") or "COMPANY"
         f  = MappingView(self._content, self._db, self._sdb, et,
                          on_complete=lambda: self._go_step(3))
@@ -303,7 +302,7 @@ class MainWindow:
     def _show_wtb(self):
         self._clear_content()
         self._highlight_step(3)
-        from .wtb_view import WTBView
+        from gui.wtb_view import WTBView
         f = WTBView(self._content, self._db,
                     on_proceed=lambda: self._go_step(4))
         f.pack(fill="both", expand=True)
@@ -311,7 +310,7 @@ class MainWindow:
     def _show_ppe(self):
         self._clear_content()
         self._highlight_step(4)
-        from .ppe_view import PPEView
+        from gui.ppe_view import PPEView
         f = PPEView(self._content, self._db,
                     on_dep_posted=lambda _: self._status_var.set("Depreciation posted."))
         f.pack(fill="both", expand=True)
@@ -319,7 +318,7 @@ class MainWindow:
     def _show_annexures(self):
         self._clear_content()
         self._highlight_step(5)
-        from .annexures_view import AnnexuresView
+        from gui.annexures_view import AnnexuresView
         f = AnnexuresView(self._content, self._db, self._sdb)
         f.pack(fill="both", expand=True)
         self._status_var.set("Custom Annexures — fill buckets, tie out to TB.")
@@ -336,7 +335,7 @@ class MainWindow:
         small = False
         if et == "COMPANY":
             try:
-                from ..core.validator import is_small_company
+                from core.validator import is_small_company
                 em = self._db.get_all_entity()
                 paid_up = float(em.get("paid_up_capital") or 0)
                 turnover = float(em.get("turnover") or 0)
@@ -347,7 +346,7 @@ class MainWindow:
         def _rebuild_cf(include: bool):
             return engine.generate(include_cf=include).cf
 
-        from .fs_viewer import FSViewer
+        from gui.fs_viewer import FSViewer
         f = FSViewer(self._content, doc, self._db,
                      on_proceed=lambda: self._go_notes(),
                      rebuild_cf=_rebuild_cf,
@@ -356,9 +355,9 @@ class MainWindow:
         self._status_var.set("Financial Statements generated.")
 
     def _build_fs_doc(self):
-        from ..core.fs_engine import FSEngine
-        from ..core.wtb_engine import aggregate_by_code, build_wtb_lines, apply_adjustments
-        from ..core.master_db import get_lookup_map
+        from core.fs_engine import FSEngine
+        from core.wtb_engine import aggregate_by_code, build_wtb_lines, apply_adjustments
+        from core.master_db import get_lookup_map
         wtb_rows = self._db.get_wtb()
         raw_rows = self._db.get_raw_tb()
         lines    = build_wtb_lines(wtb_rows, raw_rows)
@@ -376,8 +375,8 @@ class MainWindow:
     def _go_notes(self):
         self._clear_content()
         self._highlight_step(7)
-        from .notes_view import NotesView
-        from ..core.ppe_engine import recalc_asset
+        from gui.notes_view import NotesView
+        from core.ppe_engine import recalc_asset
         try:
             doc, _, totals = self._build_fs_doc()
         except Exception as e:
@@ -388,7 +387,7 @@ class MainWindow:
         et  = self._db.get_meta("entity_type") or "COMPANY"
         div = int(self._db.get_meta("rounding_divisor") or "1")
         em  = self._db.get_all_entity()
-        from ..core.notes_engine import NotesEngine
+        from core.notes_engine import NotesEngine
         ne    = NotesEngine(totals, et, ppe_data, div, em)
         notes, _ = ne.generate_dynamic(doc)
         f = NotesView(self._content, notes, self._db)
@@ -424,7 +423,7 @@ class MainWindow:
 
         nb = ttk.Notebook(self._content)
         nb.pack(fill="both", expand=True)
-        from .report_editor import ReportEditor
+        from gui.report_editor import ReportEditor
         self._report_texts = {}
         if show_directors:
             dr = ReportEditor(nb, self._db, "directors")
@@ -438,8 +437,8 @@ class MainWindow:
     def _validate(self):
         if not self._db:
             messagebox.showinfo("No Project", "Open a project first."); return
-        from ..core.validator import validate_mapping_complete, validate_balance
-        from ..core.wtb_engine import aggregate_by_code, build_wtb_lines
+        from core.validator import validate_mapping_complete, validate_balance
+        from core.wtb_engine import aggregate_by_code, build_wtb_lines
         wtb_rows = self._db.get_wtb()
         raw_rows = self._db.get_raw_tb()
         lines    = build_wtb_lines(wtb_rows, raw_rows)
@@ -475,7 +474,7 @@ class MainWindow:
             ae = self._report_texts.get("audit_editor")
             if de: rtexts["directors"] = de.get_text()
             if ae: rtexts["audit"]     = ae.get_text()
-        from .export_dialog import ExportDialog
+        from gui.export_dialog import ExportDialog
         ExportDialog(self._root, self._db, rtexts)
 
     def _about(self):

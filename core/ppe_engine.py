@@ -1,7 +1,7 @@
 """PPE Register engine — SLM/WDV depreciation, IT schedule."""
 
 from __future__ import annotations
-from ..config import PPE_USEFUL_LIFE, PPE_IT_RATES
+from config import PPE_USEFUL_LIFE, PPE_IT_RATES
 
 
 def calc_slm(gross_op: float, additions: float, disposals: float,

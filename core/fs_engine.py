@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
-from .master_db import get_lookup_map, MappingEntry
+from core.master_db import get_lookup_map, MappingEntry
 
 
 RowType = Literal["HEADER", "SECTION", "DATA", "SUBTOTAL", "TOTAL", "GRAND", "TEXT", "BLANK"]

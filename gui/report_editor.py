@@ -3,9 +3,9 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox, font as tkfont
-from ..config import THEME as T
-from ..gui.theme import primary_btn, secondary_btn, label
-from ..export.docx_exporter import (
+from config import THEME as T
+from gui.theme import primary_btn, secondary_btn, label
+from export.docx_exporter import (
     DIRECTORS_REPORT_TEMPLATE, AUDIT_REPORT_TEMPLATE, _fill
 )
 

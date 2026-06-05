@@ -4,7 +4,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
 from typing import Callable
-from ..config import THEME as T
+from config import THEME as T
 
 
 class EditableGrid(ttk.Frame):

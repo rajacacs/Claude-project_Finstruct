@@ -6,13 +6,13 @@ User enters values bucket-by-bucket; live TB tie-out check shows variance.
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ..config import THEME as T
-from ..core.annexures import (
+from config import THEME as T
+from core.annexures import (
     ANNEXURE_DEFS, build_blank_annexure, load_annexure, save_annexure, AnnexureRow
 )
-from ..core.wtb_engine import aggregate_by_code, build_wtb_lines, apply_adjustments
-from ..core.master_db import get_lookup_map
-from ..gui.theme import primary_btn, secondary_btn, label
+from core.wtb_engine import aggregate_by_code, build_wtb_lines, apply_adjustments
+from core.master_db import get_lookup_map
+from gui.theme import primary_btn, secondary_btn, label
 
 
 class AnnexuresView(ttk.Frame):

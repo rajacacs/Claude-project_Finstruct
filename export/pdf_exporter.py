@@ -14,8 +14,8 @@ from reportlab.platypus import (
 )
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
 
-from ..core.fs_engine import FSLine, FSDocument, RowType
-from ..core.notes_engine import Note
+from core.fs_engine import FSLine, FSDocument, RowType
+from core.notes_engine import Note
 
 # ── Colours (NSE/BSE listed-company neutral grey palette) ──────────────
 C_HDR_BG    = colors.HexColor("#333333")    # Dark grey headers

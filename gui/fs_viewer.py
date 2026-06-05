@@ -3,10 +3,10 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ..config import THEME as T
-from ..core.fs_engine import FSDocument, FSLine
-from ..gui.theme import primary_btn, secondary_btn, label
-from .fs_grid_view import EditableGrid
+from config import THEME as T
+from core.fs_engine import FSDocument, FSLine
+from gui.theme import primary_btn, secondary_btn, label
+from gui.fs_grid_view import EditableGrid
 
 
 def _fmt(v: float | None) -> str:

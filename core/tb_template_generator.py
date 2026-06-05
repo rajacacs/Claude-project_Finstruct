@@ -7,7 +7,7 @@ derived from the GAS reference implementations (NCE automators + Sch III tool).
 from __future__ import annotations
 from pathlib import Path
 
-from .master_db import get_master, MappingEntry
+from core.master_db import get_master, MappingEntry
 
 SENTINEL_PREFIX = "__FINSTRUCT_TB_TEMPLATE_"
 SENTINEL_SUFFIX = "__"

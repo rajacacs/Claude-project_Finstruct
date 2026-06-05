@@ -4,10 +4,10 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
-from ..config import THEME as T
-from ..core.tb_importer import import_xlsx, import_csv, import_tally_xml
-from ..core.tb_template_generator import generate as generate_tb_template
-from ..gui.theme import primary_btn, secondary_btn, label
+from config import THEME as T
+from core.tb_importer import import_xlsx, import_csv, import_tally_xml
+from core.tb_template_generator import generate as generate_tb_template
+from gui.theme import primary_btn, secondary_btn, label
 
 
 class ColumnMappingDialog(tk.Toplevel):
@@ -81,7 +81,7 @@ class ColumnMappingDialog(tk.Toplevel):
         # Buttons
         btn = ttk.Frame(self)
         btn.pack(fill="x", padx=8, pady=6)
-        from ..gui.theme import primary_btn, secondary_btn
+        from gui.theme import primary_btn, secondary_btn
         primary_btn(btn, "✔ Confirm Mapping", command=self._confirm).pack(side="right", padx=4)
         secondary_btn(btn, "Cancel", command=self.destroy).pack(side="right", padx=4)
         secondary_btn(btn, "Auto-detect", command=self._auto_detect).pack(side="left", padx=4)
@@ -172,7 +172,7 @@ class TBImportView(ttk.Frame):
             ("py",     "PY Net",            110, "e"),
             ("src",    "Source",             70, "center"),
         ]
-        from .fs_grid_view import EditableGrid
+        from gui.fs_grid_view import EditableGrid
         self._grid = EditableGrid(self, columns=cols)
         self._grid.pack(fill="both", expand=True, padx=8, pady=4)
 
@@ -246,7 +246,7 @@ class TBImportView(ttk.Frame):
         try:
             if suffix in (".xlsx", ".xls"):
                 # Check for FinStruct template first — skip wizard if detected
-                from ..core.tb_importer import (
+                from core.tb_importer import (
                     detect_finstruct_template, import_finstruct_template,
                     import_xlsx, import_csv, get_raw_headers_and_rows, get_auto_col_map,
                     override_columns
@@ -263,7 +263,7 @@ class TBImportView(ttk.Frame):
                         if result is None:
                             return  # user cancelled
             elif suffix in (".csv", ".txt"):
-                from ..core.tb_importer import (
+                from core.tb_importer import (
                     import_csv, get_raw_headers_and_rows, get_auto_col_map, override_columns
                 )
                 headers, preview = get_raw_headers_and_rows(self._path)
@@ -274,7 +274,7 @@ class TBImportView(ttk.Frame):
                     if result is None:
                         return
             elif suffix == ".xml":
-                from ..core.tb_importer import import_tally_xml
+                from core.tb_importer import import_tally_xml
                 result = import_tally_xml(self._path)
             else:
                 messagebox.showerror("Unsupported", f"File type '{suffix}' not supported.")
@@ -287,8 +287,8 @@ class TBImportView(ttk.Frame):
         self._render(result)
 
     def _run_mapping_wizard(self, headers, preview):
-        from ..core.tb_importer import get_auto_col_map, override_columns
-        from ..core.tb_importer import import_xlsx, import_csv
+        from core.tb_importer import get_auto_col_map, override_columns
+        from core.tb_importer import import_xlsx, import_csv
         auto_map = get_auto_col_map(headers)
         dlg = ColumnMappingDialog(self, headers, preview, auto_map)
         self.wait_window(dlg)
@@ -303,7 +303,7 @@ class TBImportView(ttk.Frame):
             all_rows = list(ws.iter_rows(values_only=True))
             wb.close()
             if not all_rows:
-                from ..core.tb_importer import ImportResult
+                from core.tb_importer import ImportResult
                 r = ImportResult(); r.errors.append("Empty sheet"); return r
             raw_rows = all_rows[1:]
         else:
@@ -315,10 +315,10 @@ class TBImportView(ttk.Frame):
             reader = _csv.reader(io.StringIO(text), dialect)
             rows = list(reader)
             raw_rows = rows[1:] if rows else []
-        from ..core.tb_importer import ImportResult
+        from core.tb_importer import ImportResult
         result = ImportResult()
         result.col_map = dlg.result
-        from ..core.tb_importer import _parse_rows_with_map
+        from core.tb_importer import _parse_rows_with_map
         _parse_rows_with_map(headers, raw_rows, result, dlg.result)
         return result
 
@@ -401,5 +401,5 @@ class TBImportView(ttk.Frame):
         self._msg.configure(state="disabled")
 
     def _zoho_connect(self):
-        from .zoho_connect_dialog import ZohoConnectDialog
+        from gui.zoho_connect_dialog import ZohoConnectDialog
         ZohoConnectDialog(self, self._db)

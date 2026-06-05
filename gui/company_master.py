@@ -3,10 +3,10 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, messagebox
-from ..config import THEME as T
-from ..gui.theme import label, entry, card, primary_btn, secondary_btn
-from ..core.entity_types import EntityType, ENTITY_LABELS, AOP_SUBTYPES, TRUST_SUBTYPES
-from ..core.validator import validate_cin, validate_fy, validate_pan
+from config import THEME as T
+from gui.theme import label, entry, card, primary_btn, secondary_btn
+from core.entity_types import EntityType, ENTITY_LABELS, AOP_SUBTYPES, TRUST_SUBTYPES
+from core.validator import validate_cin, validate_fy, validate_pan
 
 
 class CompanyMasterForm(ttk.Frame):

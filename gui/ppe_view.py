@@ -5,11 +5,11 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 from pathlib import Path
 from openpyxl import load_workbook
-from ..config import THEME as T, PPE_CATEGORIES
-from ..core.ppe_engine import recalc_asset, summarize_ppe
-from ..core.ppe_template_generator import generate_ppe_template
-from ..gui.theme import primary_btn, secondary_btn, label
-from .fs_grid_view import EditableGrid
+from config import THEME as T, PPE_CATEGORIES
+from core.ppe_engine import recalc_asset, summarize_ppe
+from core.ppe_template_generator import generate_ppe_template
+from gui.theme import primary_btn, secondary_btn, label
+from gui.fs_grid_view import EditableGrid
 
 
 class PPEView(ttk.Frame):

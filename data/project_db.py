@@ -9,7 +9,7 @@ from datetime import datetime
 from contextlib import contextmanager
 from typing import Any
 
-from .encryption import encrypt, decrypt
+from data.encryption import encrypt, decrypt
 
 log = logging.getLogger(__name__)
 

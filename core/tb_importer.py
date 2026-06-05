@@ -7,6 +7,9 @@ import logging
 import re
 from pathlib import Path
 
+from openpyxl import Workbook, load_workbook
+from core.tb_template_generator import SENTINELS
+
 log = logging.getLogger(__name__)
 
 COMMON_LEDGER_HEADERS = {"ledger", "account", "particulars", "name", "description",
@@ -101,7 +104,7 @@ def _build_subtype_index() -> dict:
       'head' : heading.lower()     → list of (code, sub_heading)
       'all'  : list of MappingEntry (for keyword substring fallback)
     """
-    from .master_db import MASTER
+    from core.master_db import MASTER
     sub_idx: dict[str, str] = {}
     head_idx: dict[str, list] = {}
     entries = []
