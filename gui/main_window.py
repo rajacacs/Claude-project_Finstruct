@@ -43,6 +43,7 @@ class MainWindow:
         self._build_layout()
         self._show_dashboard()
         self._bind_global_shortcuts()
+        self._root.protocol("WM_DELETE_WINDOW", self._on_exit)
 
     # ── Menu Bar ─────────────────────────────────────────────────────────
     def _build_menu(self):
@@ -60,7 +61,7 @@ class MainWindow:
         fm.add_separator()
         fm.add_command(label="Dashboard",          command=self._show_dashboard)
         fm.add_separator()
-        fm.add_command(label="Exit", command=self._root.quit)
+        fm.add_command(label="Exit", command=self._on_exit)
 
         # Project
         pm = tk.Menu(mb, tearoff=0, bg=T["bg_white"], fg=T["text"],
@@ -486,6 +487,14 @@ class MainWindow:
                             "Prop, Part, AOP, Trust, Section 8\n\n"
                             "ICAI Notified Formats\n"
                             "© 2026 rajacacs")
+
+    def _on_exit(self):
+        if self._db:
+            try:
+                self._db.close()
+            except Exception:
+                pass
+        self._root.quit()
 
     # ── Keyboard Shortcuts ────────────────────────────────────────────────
     def _bind_global_shortcuts(self):
