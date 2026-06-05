@@ -30,9 +30,12 @@ class Dashboard(ttk.Frame):
 
         ttk.Separator(self, orient="horizontal").pack(fill="x")
 
-        # Recent projects
-        label(self, "Recent Projects", style="Sec.TLabel").pack(
-            anchor="w", padx=16, pady=(12, 4))
+        # Recent projects header
+        self._recent_hdr = ttk.Frame(self)
+        self._recent_hdr.pack(fill="x", padx=16, pady=(12, 4))
+        label(self._recent_hdr, "Recent Projects", style="Sec.TLabel").pack(side="left")
+        self._recent_actions = ttk.Frame(self._recent_hdr)
+        self._recent_actions.pack(side="right")
 
         self._list_frame = ttk.Frame(self)
         self._list_frame.pack(fill="both", expand=True, padx=16, pady=4)
@@ -40,12 +43,16 @@ class Dashboard(ttk.Frame):
     def _refresh(self):
         for w in self._list_frame.winfo_children():
             w.destroy()
+        for w in self._recent_actions.winfo_children():
+            w.destroy()
+
         recent = self._sdb.get_recent(15)
         if not recent:
             label(self._list_frame,
                   "No recent projects. Click '+ New Project' to begin.",
                   style="Muted.TLabel").pack(pady=20)
             return
+
         cols = [("name","Entity Name",240),("type","Type",180),
                 ("fy","FY",80),("opened","Last Opened",160),("path","Path",300)]
         tree = ttk.Treeview(self._list_frame,
@@ -67,10 +74,9 @@ class Dashboard(ttk.Frame):
         tree.bind("<Double-Button-1>", lambda e: self._open_selected(tree))
         tree.bind("<Return>", lambda e: self._open_selected(tree))
 
-        btn_row = ttk.Frame(self._list_frame)
-        btn_row.pack(side="bottom", fill="x", pady=6)
-        secondary_btn(btn_row, "Remove from list",
-                      command=lambda: self._remove(tree)).pack(side="left", padx=4)
+        # Action buttons in header
+        secondary_btn(self._recent_actions, "Remove from list",
+                      command=lambda: self._remove(tree)).pack(side="right")
 
     def _open_selected(self, tree: ttk.Treeview):
         sel = tree.selection()
