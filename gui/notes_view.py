@@ -2,17 +2,103 @@
 
 from __future__ import annotations
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, simpledialog
 from config import THEME as T
 from core.notes_engine import Note
 from core.fs_engine import FSLine
-from gui.theme import label, primary_btn, secondary_btn
-from gui.fs_grid_view import EditableGrid
+from gui.theme import label, primary_btn, secondary_btn, scrolled_frame
 
 
 def _fmt(v):
     if v is None or v == 0: return "-"
     return f"{float(v):,.2f}"
+
+
+class NotesGrid(ttk.Frame):
+    """Custom grid for Notes that supports text wrapping and auto-height."""
+    def __init__(self, parent, fy_labels):
+        super().__init__(parent)
+        self._outer, self._canvas, self._inner = scrolled_frame(self)
+        self._outer.pack(fill="both", expand=True)
+        self._fy_labels = fy_labels
+        self._rows_data = []  # (l_var, c_var, p_var, tag)
+        self._label_widgets = []
+
+        self._inner.columnconfigure(0, weight=1)
+        self._inner.columnconfigure(1, minsize=150)
+        self._inner.columnconfigure(2, minsize=150)
+
+        # Header
+        h_style = {
+            "font": (T["font"], T["font_size"], "bold"),
+            "background": T["header_bg"],
+            "foreground": T["header_fg"],
+            "padx": 10, "pady": 5
+        }
+        tk.Label(self._inner, text="Particulars", anchor="w", **h_style).grid(row=0, column=0, sticky="ew")
+        tk.Label(self._inner, text=fy_labels[0], anchor="e", **h_style).grid(row=0, column=1, sticky="ew")
+        tk.Label(self._inner, text=fy_labels[1], anchor="e", **h_style).grid(row=0, column=2, sticky="ew")
+
+        self._inner.bind("<Configure>", self._on_configure)
+
+    def _on_configure(self, event):
+        # Update wraplength for all labels based on Particulars column width
+        w = self._inner.winfo_width() - 320
+        if w < 100: w = 100
+        for lbl in self._label_widgets:
+            lbl.configure(wraplength=w)
+
+    def load_rows(self, rows_list):
+        for i, row in enumerate(rows_list):
+            vals = row["values"]
+            tag = row.get("tag", "")
+
+            l_var = tk.StringVar(value=vals[0])
+            c_var = tk.StringVar(value=vals[1])
+            p_var = tk.StringVar(value=vals[2])
+
+            bg = T["bg_white"]
+            fg = T["text"]
+            font = (T["font"], T["font_size"])
+
+            if tag == "section":
+                bg, fg, font = T["section_bg"], T["section_fg"], (T["font"], T["font_size"], "bold")
+            elif tag == "total":
+                bg, fg, font = T["total_bg"], "white", (T["font"], T["font_size"], "bold")
+            elif tag == "grand":
+                bg, fg, font = T["primary"], "white", (T["font"], T["font_size"], "bold")
+            elif tag == "header":
+                bg, fg, font = T["primary"], "white", (T["font"], T["font_head"], "bold")
+            elif tag == "alt":
+                bg = T["bg_alt"]
+
+            # Label for particulars (wrapped)
+            lbl = tk.Label(self._inner, textvariable=l_var, background=bg, foreground=fg, font=font,
+                           anchor="w", justify="left", padx=10, pady=5)
+            lbl.grid(row=i+1, column=0, sticky="nsew", padx=1, pady=1)
+            self._label_widgets.append(lbl)
+
+            # Double-click to edit label
+            lbl.bind("<Double-Button-1>", lambda e, v=l_var: self._edit_label(v))
+
+            # Entry for CY/PY
+            c_ent = tk.Entry(self._inner, textvariable=c_var, background=bg, foreground=fg, font=font,
+                             justify="right", relief="flat", width=15)
+            c_ent.grid(row=i+1, column=1, sticky="nsew", padx=1, pady=1)
+
+            p_ent = tk.Entry(self._inner, textvariable=p_var, background=bg, foreground=fg, font=font,
+                             justify="right", relief="flat", width=15)
+            p_ent.grid(row=i+1, column=2, sticky="nsew", padx=1, pady=1)
+
+            self._rows_data.append((l_var, c_var, p_var, tag))
+
+    def _edit_label(self, var):
+        new_val = simpledialog.askstring("Edit Particulars", "Enter text:", initialvalue=var.get())
+        if new_val is not None:
+            var.set(new_val)
+
+    def get_all_rows(self):
+        return [(l.get(), c.get(), p.get()) for l, c, p, t in self._rows_data]
 
 
 class NotesView(ttk.Frame):
@@ -22,7 +108,7 @@ class NotesView(ttk.Frame):
         self._db    = db
         self._page_size = 5
         self._current_page = 0
-        self._grids: dict[int, EditableGrid] = {}
+        self._grids: dict[int, NotesGrid] = {}
         self._note_frames: list[ttk.Frame] = []
         # Derive FY labels
         self._fy_labels = self._derive_fy_labels()
@@ -120,15 +206,7 @@ class NotesView(ttk.Frame):
     def _build_note_tab(self, parent, note: Note):
         ttk.Label(parent, text=f"Note {note.number}: {note.title}",
                   style="Sec.TLabel").pack(anchor="w", padx=8, pady=4)
-        cy_label, py_label = self._fy_labels
-        cols = [
-            ("label", "Particulars",    360, "w"),
-            ("cy",    cy_label,         150, "e"),
-            ("py",    py_label,         150, "e"),
-        ]
-        grid = EditableGrid(parent, columns=cols,
-                            on_cell_change=None,
-                            editable_cols={"cy","py","label"})
+        grid = NotesGrid(parent, self._fy_labels)
         grid.pack(fill="both", expand=True, padx=8, pady=4)
         rows = []
         for i, ln in enumerate(note.lines):
