@@ -16,9 +16,12 @@ log = logging.getLogger(__name__)
 SCHEMA_VERSION = 3
 
 PII_KEYS = {
-    "pan", "cin", "llpin", "address", "reg_addr", "pan_no",
-    "dir1_din", "dir2_din", "dir1_name", "dir2_name",
+    "pan", "cin", "llpin", "address", "reg_addr", "pan_no", "cin_no", "llpin_no",
+    "dir1_din", "dir2_din", "dir1_name", "dir2_name", "dir1_pan", "dir2_pan",
     "cfo_name", "cs_name", "prop_name", "partner1_name", "partner2_name",
+    "partner1_pan", "partner2_pan", "partner1_din", "partner2_din",
+    "prop_pan", "prop_addr", "din", "reg_no", "audit_partner", "auditor_partner",
+    "president_name", "secretary_name", "treasurer_name",
 }
 
 
@@ -276,24 +279,33 @@ class ProjectDB:
                     "INSERT OR REPLACE INTO entity_master(key,value) VALUES(?,?)", (k, stored)
                 )
 
-    def get_directors(self) -> list[sqlite3.Row]:
-        return self._conn.execute(
+    def get_directors(self) -> list[dict]:
+        rows = self._conn.execute(
             "SELECT * FROM directors ORDER BY sort_order, id"
         ).fetchall()
+        out = []
+        for r in rows:
+            d = dict(r)
+            d["din"] = decrypt(d.get("din", ""))
+            d["pan"] = decrypt(d.get("pan", ""))
+            out.append(d)
+        return out
 
     def upsert_director(self, d: dict) -> int:
         with self._tx():
+            din = encrypt(d.get("din", ""))
+            pan = encrypt(d.get("pan", ""))
             if d.get("id"):
                 self._conn.execute(
                     "UPDATE directors SET name=?,designation=?,din=?,pan=?,is_signing_auth=?,sort_order=? WHERE id=?",
-                    (d["name"], d.get("designation","Director"), d.get("din",""), d.get("pan",""),
+                    (d["name"], d.get("designation","Director"), din, pan,
                      int(d.get("is_signing_auth",1)), int(d.get("sort_order",0)), d["id"])
                 )
                 return d["id"]
             else:
                 cur = self._conn.execute(
                     "INSERT INTO directors(name,designation,din,pan,is_signing_auth,sort_order) VALUES(?,?,?,?,?,?)",
-                    (d["name"], d.get("designation","Director"), d.get("din",""), d.get("pan",""),
+                    (d["name"], d.get("designation","Director"), din, pan,
                      int(d.get("is_signing_auth",1)), int(d.get("sort_order",0)))
                 )
                 return cur.lastrowid

@@ -22,19 +22,25 @@ def _load_or_create_key() -> Fernet:
         import keyring
         raw = keyring.get_password("finstruct_v1", "enc_key")
         if raw:
+            log.debug("Loaded encryption key from keyring.")
             _fernet = Fernet(raw.encode())
             return _fernet
+        
+        log.info("Generating new encryption key and saving to keyring.")
         key = Fernet.generate_key()
         keyring.set_password("finstruct_v1", "enc_key", key.decode())
         _fernet = Fernet(key)
         return _fernet
-    except Exception:
-        pass
+    except Exception as e:
+        log.warning("Keyring access failed, falling back to file: %s", e)
+    
     # File fallback
     _KEY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if _KEY_FILE.exists():
+        log.debug("Loaded encryption key from file fallback.")
         _fernet = Fernet(_KEY_FILE.read_bytes().strip())
     else:
+        log.info("Generating new encryption key in file fallback.")
         key = Fernet.generate_key()
         _KEY_FILE.write_bytes(key)
         try:
@@ -61,4 +67,6 @@ def decrypt(value: str) -> str:
     try:
         return _load_or_create_key().decrypt(value.encode()).decode()
     except (InvalidToken, Exception):
-        return "[DECRYPTION ERROR]"
+        # Return original value instead of error string to avoid data loss
+        # if the key is missing/different.
+        return value
