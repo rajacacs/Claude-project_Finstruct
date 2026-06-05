@@ -15,9 +15,11 @@ def rollover_project(src_path: Path, dest_path: Path,
     if dest_path.exists():
         raise FileExistsError(f"Destination project already exists: {dest_path}")
 
+    # Ensure parent directory exists
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src_path, dest_path)
 
-    from ..data.project_db import ProjectDB
+    from data.project_db import ProjectDB
     db = ProjectDB(dest_path)
     db.connect()
 
