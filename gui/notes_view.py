@@ -134,6 +134,8 @@ class NotesView(ttk.Frame):
         top.pack(fill="x", padx=8, pady=6)
         label(top, "7.  Notes to Financial Statements", style="Sec.TLabel").pack(side="left")
         primary_btn(top, "Save All Note Edits", command=self._save_all).pack(side="right", padx=4)
+        self._counter_lbl = label(top, "", style="Muted.TLabel")
+        self._counter_lbl.pack(side="right", padx=20)
 
         # Validation: check if notes exist
         if not self._notes:
@@ -189,7 +191,23 @@ class NotesView(ttk.Frame):
             idx = 1 if self._current_page > 0 else 0
             self._nb.select(idx)
 
+        self._update_counter()
         self._nb.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+
+    def _update_counter(self):
+        """Update the 'Note X of XX' label."""
+        if not self._notes: return
+        sel = self._nb.select()
+        if not sel: return
+        
+        # Identify which note frame is selected
+        sel_widget = self._nb.nametowidget(sel)
+        try:
+            idx = self._note_frames.index(sel_widget)
+            self._counter_lbl.configure(text=f"Note {idx + 1} of {len(self._notes)}")
+        except ValueError:
+            # Not a note frame (likely Prev/Next nav tab)
+            pass
 
     def _on_tab_changed(self, event):
         sel = self._nb.select()
@@ -202,6 +220,8 @@ class NotesView(ttk.Frame):
         elif txt == "Next »":
             self._current_page += 1
             self._update_tabs(select_index=1)
+        else:
+            self._update_counter()
 
     def _build_note_tab(self, parent, note: Note):
         ttk.Label(parent, text=f"Note {note.number}: {note.title}",
