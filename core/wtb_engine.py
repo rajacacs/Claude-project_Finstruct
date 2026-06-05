@@ -33,24 +33,39 @@ class ValidationResult:
 
 
 def build_wtb_lines(wtb_rows, raw_tb_rows) -> list[WTBLine]:
+    """Build WTBLine objects from database rows with error resilience."""
     lookup = get_lookup_map()
-    raw_map = {r["id"]: r for r in raw_tb_rows}
+    raw_map = {r["id"]: r for r in raw_tb_rows if "id" in r}
     lines = []
+    
     for w in wtb_rows:
-        raw = raw_map.get(w["raw_tb_id"])
-        entry = lookup.get(w["mapping_code"]) if w["mapping_code"] else None
-        lines.append(WTBLine(
-            raw_tb_id    = w["raw_tb_id"],
-            ledger_name  = raw["ledger_name"] if raw else "",
-            group_name   = raw["group_name"] if raw else "",
-            mapping_code = w["mapping_code"] or "",
-            entry        = entry,
-            confidence   = w["confidence"] or 0.0,
-            source       = w["confidence_source"] or "",
-            cy_net       = w["cy_net"] or 0.0,
-            py_net       = w["py_net"] or 0.0,
-            is_confirmed = bool(w["is_confirmed"]),
-        ))
+        try:
+            raw_id = w.get("raw_tb_id")
+            if raw_id is None:
+                continue
+                
+            raw = raw_map.get(raw_id)
+            m_code = w.get("mapping_code")
+            entry = lookup.get(m_code) if m_code else None
+            
+            lines.append(WTBLine(
+                raw_tb_id    = raw_id,
+                ledger_name  = (raw["ledger_name"] if raw and "ledger_name" in raw else "Unknown Ledger"),
+                group_name   = (raw["group_name"] if raw and "group_name" in raw else ""),
+                mapping_code = m_code or "",
+                entry        = entry,
+                confidence   = float(w.get("confidence") or 0.0),
+                source       = w.get("confidence_source") or "MANUAL",
+                cy_net       = float(w.get("cy_net") or 0.0),
+                py_net       = float(w.get("py_net") or 0.0),
+                is_confirmed = bool(w.get("is_confirmed", 0)),
+            ))
+        except (KeyError, ValueError, TypeError) as e:
+            # Log error but don't crash the whole list building
+            import logging
+            logging.getLogger(__name__).error(f"Error processing WTB row {w}: {e}")
+            continue
+            
     return lines
 
 
@@ -60,9 +75,12 @@ def aggregate_by_code(lines: list[WTBLine]) -> dict[str, tuple[float, float]]:
     for l in lines:
         if not l.mapping_code:
             continue
-        result.setdefault(l.mapping_code, [0.0, 0.0])
-        result[l.mapping_code][0] += l.cy_net
-        result[l.mapping_code][1] += l.py_net
+        try:
+            result.setdefault(l.mapping_code, [0.0, 0.0])
+            result[l.mapping_code][0] += float(l.cy_net or 0.0)
+            result[l.mapping_code][1] += float(l.py_net or 0.0)
+        except (ValueError, TypeError):
+            continue
     return {k: (v[0], v[1]) for k, v in result.items()}
 
 

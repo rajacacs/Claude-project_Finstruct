@@ -51,60 +51,67 @@ class WTBView(ttk.Frame):
         self._adj_list.pack(fill="x", padx=4, pady=4)
 
     def _load(self):
-        wtb_rows = self._db.get_wtb()
-        raw_rows = self._db.get_raw_tb()
+        try:
+            wtb_rows = self._db.get_wtb()
+            raw_rows = self._db.get_raw_tb()
 
-        # Validate WTB has data
-        if not raw_rows:
-            self._grid.load_rows([])
-            self._status_var.set("⚠ No Trial Balance data found. Please import TB first (Step 2).")
+            # Validate WTB has data
+            if not raw_rows:
+                self._grid.load_rows([])
+                self._status_var.set("⚠ No Trial Balance data found. Please import TB first (Step 2).")
+                self._adj_list.configure(state="normal")
+                self._adj_list.delete("1.0", "end")
+                self._adj_list.insert("end", "(No adjustments)")
+                self._adj_list.configure(state="disabled")
+                return
+
+            lines    = build_wtb_lines(wtb_rows, raw_rows)
+            from core.master_db import get_lookup_map
+            lm = get_lookup_map()
+            grid_rows = []
+            for i, ln in enumerate(lines):
+                e = lm.get(ln.mapping_code)
+                group   = e.group    if e else ""
+                heading = e.heading  if e else ""
+                fs_tag  = e.fs_tag   if e else ""
+                cy_s = f"{ln.cy_net:,.2f}" if ln.cy_net else "—"
+                py_s = f"{ln.py_net:,.2f}" if ln.py_net else "—"
+                tag = "alt" if i % 2 else ""
+                grid_rows.append({
+                    "iid": str(ln.raw_tb_id),
+                    "tag": tag,
+                    "values": [group, heading, ln.ledger_name,
+                               ln.mapping_code, cy_s, py_s, fs_tag],
+                })
+            self._grid.load_rows(grid_rows)
+
+            # Show adjustments
+            adjs = self._db.get_adjustments()
             self._adj_list.configure(state="normal")
             self._adj_list.delete("1.0", "end")
-            self._adj_list.insert("end", "(No adjustments)")
+            for a in adjs:
+                dr = f"Dr ₹{a['dr_amount']:,.2f}" if a["dr_amount"] else ""
+                cr = f"Cr ₹{a['cr_amount']:,.2f}" if a["cr_amount"] else ""
+                self._adj_list.insert("end",
+                    f"{a['adj_id']}  |  {a['ledger_name']}  |  {dr}{cr}  |  {a['narration']}\n")
             self._adj_list.configure(state="disabled")
-            return
 
-        lines    = build_wtb_lines(wtb_rows, raw_rows)
-        from core.master_db import get_lookup_map
-        lm = get_lookup_map()
-        grid_rows = []
-        for i, ln in enumerate(lines):
-            e = lm.get(ln.mapping_code)
-            group   = e.group    if e else ""
-            heading = e.heading  if e else ""
-            fs_tag  = e.fs_tag   if e else ""
-            cy_s = f"{ln.cy_net:,.2f}" if ln.cy_net else "—"
-            py_s = f"{ln.py_net:,.2f}" if ln.py_net else "—"
-            tag = "alt" if i % 2 else ""
-            grid_rows.append({
-                "iid": str(ln.raw_tb_id),
-                "tag": tag,
-                "values": [group, heading, ln.ledger_name,
-                           ln.mapping_code, cy_s, py_s, fs_tag],
-            })
-        self._grid.load_rows(grid_rows)
-
-        # Show adjustments
-        adjs = self._db.get_adjustments()
-        self._adj_list.configure(state="normal")
-        self._adj_list.delete("1.0", "end")
-        for a in adjs:
-            dr = f"Dr ₹{a['dr_amount']:,.2f}" if a["dr_amount"] else ""
-            cr = f"Cr ₹{a['cr_amount']:,.2f}" if a["cr_amount"] else ""
-            self._adj_list.insert("end",
-                f"{a['adj_id']}  |  {a['ledger_name']}  |  {dr}{cr}  |  {a['narration']}\n")
-        self._adj_list.configure(state="disabled")
-
-        # Balance
-        totals = aggregate_by_code(lines)
-        et = self._db.get_meta("entity_type") or "COMPANY"
-        r  = validate_balance(totals, et)
-        if r.ok:
-            self._status_var.set(
-                f"✅ {len(lines)} ledgers  |  Balance Sheet balances  |  "
-                f"Total mapped codes: {len(totals)}")
-        else:
-            self._status_var.set("⚠ " + " | ".join(r.errors + r.warnings))
+            # Balance
+            totals = aggregate_by_code(lines)
+            et = self._db.get_meta("entity_type") or "COMPANY"
+            r  = validate_balance(totals, et)
+            if r.ok:
+                self._status_var.set(
+                    f"✅ {len(lines)} ledgers  |  Balance Sheet balances  |  "
+                    f"Total mapped codes: {len(totals)}")
+            else:
+                self._status_var.set("⚠ " + " | ".join(r.errors + r.warnings))
+        except Exception as e:
+            import traceback
+            err_msg = f"Failed to load Working Trial Balance: {str(e)}"
+            self._status_var.set(f"❌ {err_msg}")
+            messagebox.showerror("System Error", 
+                                f"{err_msg}\n\nTechnical details:\n{traceback.format_exc()}")
 
     def _validate(self):
         wtb_rows = self._db.get_wtb()
