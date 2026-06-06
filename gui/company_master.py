@@ -254,7 +254,7 @@ class CompanyMasterForm(ttk.Frame):
 
         signs_var = BooleanVar(value=bool(d["is_signing_auth"]) if d else True)
         ttk.Checkbutton(top, text="Signs Financial Statements?",
-                        variable=signs_var).grid(row=len(fields), column=0,
+                        variable=signs_var, style="TCheckbutton").grid(row=len(fields), column=0,
                                                  columnspan=2, padx=8, pady=4)
 
         def _ok():

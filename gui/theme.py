@@ -100,9 +100,46 @@ def apply_theme(root: tk.Tk):
     # ── Separator ────────────────────────────────────────────────────────
     style.configure("TSeparator", background=T["border"])
 
-    # ── Checkbutton ──────────────────────────────────────────────────────
+    # ── Checkbutton (Custom Tick Images) ──────────────────────────────────
+    try:
+        # Create persistent references to images so they aren't garbage collected
+        global _cb_off_img, _cb_on_img
+        _cb_off_img = tk.PhotoImage(width=16, height=16)
+        _cb_off_img.put(T["bg_white"], to=(0, 0, 15, 15))
+        # Draw border
+        _cb_off_img.put(T["border"], to=(0, 0, 15, 1))
+        _cb_off_img.put(T["border"], to=(0, 0, 1, 15))
+        _cb_off_img.put(T["border"], to=(14, 0, 15, 15))
+        _cb_off_img.put(T["border"], to=(0, 14, 15, 15))
+
+        _cb_on_img = tk.PhotoImage(width=16, height=16)
+        _cb_on_img.put(T["bg_white"], to=(0, 0, 15, 15))
+        # Draw border (same as off)
+        _cb_on_img.put(T["border"], to=(0, 0, 15, 1))
+        _cb_on_img.put(T["border"], to=(0, 0, 1, 15))
+        _cb_on_img.put(T["border"], to=(14, 0, 15, 15))
+        _cb_on_img.put(T["border"], to=(0, 14, 15, 15))
+        
+        # Draw sharp blue tick mark
+        for x, y in [(3, 7), (4, 8), (5, 9), (6, 10), (7, 11), (8, 9), (9, 7), (10, 5), (11, 3)]:
+            _cb_on_img.put(T["primary"], to=(x, y))
+            _cb_on_img.put(T["primary"], to=(x+1, y))
+            _cb_on_img.put(T["primary"], to=(x, y+1))
+            
+        style.element_create("Tick.indicator", "image", _cb_off_img, ("selected", _cb_on_img))
+        style.layout("TCheckbutton", [
+            ('Checkbutton.padding', {'sticky': 'nswe', 'children': [
+                ('Tick.indicator', {'side': 'left', 'sticky': ''}),
+                ('Checkbutton.focus', {'side': 'left', 'sticky': 'w', 'children': [
+                    ('Checkbutton.label', {'sticky': 'nswe'})
+                ]})
+            ]})
+        ])
+    except Exception:
+        pass
+
     style.configure("TCheckbutton", background=T["bg"], foreground=T["text"],
-                    font=(T["font"], T["font_size"]))
+                    font=(T["font"], T["font_size"]), padding=4)
 
 
 def sidebar_btn(parent, text: str, command=None, width: int = 22) -> tk.Button:

@@ -96,7 +96,7 @@ class ExportDialog(tk.Toplevel):
         font_combo.pack(side="left", padx=4)
 
         ttk.Checkbutton(self, text="Mark as DRAFT (watermark on PDF)",
-                        variable=self._is_draft).pack(anchor="w", padx=24, pady=2)
+                        variable=self._is_draft, style="TCheckbutton").pack(anchor="w", padx=24, pady=2)
 
         # Output folder
         folder_frame = ttk.Frame(self)

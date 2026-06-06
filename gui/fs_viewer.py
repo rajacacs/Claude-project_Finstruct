@@ -44,7 +44,8 @@ class FSViewer(ttk.Frame):
             cf_frame.pack(side="left", padx=12)
             cb = ttk.Checkbutton(cf_frame, text="Include Cash Flow Statement",
                                  variable=self._include_cf,
-                                 command=self._on_cf_toggle)
+                                 command=self._on_cf_toggle,
+                                 style="TCheckbutton")
             cb.pack(side="left")
             if self._is_small:
                 label(cf_frame, "(optional — small company)", style="Muted.TLabel").pack(side="left", padx=4)
