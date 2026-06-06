@@ -96,6 +96,11 @@ class Dashboard(ttk.Frame):
         # Action buttons in header
         secondary_btn(self._recent_actions, "Remove from list",
                       command=self._remove_recent).pack(side="right")
+        tk.Button(self._recent_actions, text="Delete from list",
+                  command=self._delete_from_disk,
+                  bg=T["bg_white"], fg=T["error"], relief="flat",
+                  font=(T["font"], T["font_size"]),
+                  padx=8, pady=2, cursor="hand2").pack(side="right", padx=8)
 
     def _select_recent(self, path):
         self._selected_path = path
@@ -127,8 +132,28 @@ class Dashboard(ttk.Frame):
             self._sdb.remove_recent(self._selected_path)
             self._refresh()
 
+    def _delete_from_disk(self):
+        if not self._selected_path:
+            return
+        
+        path = Path(self._selected_path)
+        folder = path.parent
+        
+        msg = f"ARE YOU SURE?\n\nThis will PERMANENTLY DELETE the entire project folder and all its contents:\n\n{folder}\n\nThis action cannot be undone."
+        if messagebox.askyesno("Confirm Permanent Deletion", msg, icon='warning'):
+            try:
+                import shutil
+                # Check if path exists before attempting deletion
+                if folder.exists() and folder.is_dir():
+                    shutil.rmtree(folder)
+                    messagebox.showinfo("Deleted", "Project folder deleted from disk.")
+                
+                self._sdb.remove_recent(self._selected_path)
+                self._refresh()
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not delete folder. It might be in use.\n\n{e}")
+
     def _new_project(self):
-        NewProjectDialog(self, self._sdb, self._on_open)
         NewProjectDialog(self, self._sdb, self._on_open)
 
 
