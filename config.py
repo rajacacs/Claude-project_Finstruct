@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 APP_NAME    = "FinStruct"
-APP_VERSION = "1.0.0"
+APP_VERSION = "2.0.0"
 
 APPDATA     = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
 APP_DIR     = APPDATA / APP_NAME
