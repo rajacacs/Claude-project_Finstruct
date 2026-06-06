@@ -25,6 +25,7 @@ def rollover_project(src_path: Path, dest_path: Path,
 
     # Update FY
     db.set_meta("financial_year", new_fy)
+    db.set_entity("financial_year", new_fy)
     db.set_meta("created_at", datetime.now().isoformat())
     db.set_meta("is_locked", "0")
     db.set_meta("is_finalized", "0")

@@ -228,9 +228,21 @@ class MainWindow:
             messagebox.showinfo("No Project", "Open a project first."); return
         from tkinter.simpledialog import askstring
         fy = self._db.get_meta("financial_year") or "2024-25"
-        parts = fy.split("-")
-        new_start = int(parts[0]) + 1
-        new_fy_default = f"{new_start}-{str(new_start+1)[-2:]}"
+        
+        # Handle YYYY-YY or YYYY formats
+        if "-" in fy:
+            parts = fy.split("-")
+            try:
+                new_start = int(parts[0]) + 1
+                new_fy_default = f"{new_start}-{str(new_start+1)[-2:]}"
+            except ValueError:
+                new_fy_default = fy
+        else:
+            try:
+                new_fy_default = str(int(fy) + 1)
+            except ValueError:
+                new_fy_default = fy
+                
         new_fy = askstring("Rollover", f"New Financial Year:", initialvalue=new_fy_default)
         if not new_fy:
             return
