@@ -89,6 +89,7 @@ class MainWindow:
         hm = tk.Menu(mb, tearoff=0, bg=T["bg_white"], fg=T["text"],
                      activebackground=T["primary_light"])
         mb.add_cascade(label="Help", menu=hm)
+        hm.add_command(label="AI Assistance Settings", command=self._show_ai_settings)
         hm.add_command(label="About FinStruct      F1", command=self._about)
 
     # ── Layout ───────────────────────────────────────────────────────────
@@ -477,6 +478,10 @@ class MainWindow:
             if ae: rtexts["audit"]     = ae.get_text()
         from gui.export_dialog import ExportDialog
         ExportDialog(self._root, self._db, rtexts)
+
+    def _show_ai_settings(self):
+        from gui.ai_settings_dialog import AISettingsDialog
+        AISettingsDialog(self._root, self._sdb)
 
     def _about(self):
         messagebox.showinfo(f"About {APP_NAME}",

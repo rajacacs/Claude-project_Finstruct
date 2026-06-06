@@ -66,7 +66,8 @@ def decrypt(value: str) -> str:
         return value
     try:
         return _load_or_create_key().decrypt(value.encode()).decode()
-    except (InvalidToken, Exception):
+    except (InvalidToken, Exception) as e:
         # Return original value instead of error string to avoid data loss
         # if the key is missing/different.
+        logging.getLogger(__name__).debug(f"Decryption failed: {e}")
         return value

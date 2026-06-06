@@ -142,39 +142,25 @@ class Mapper:
     def map_batch(self, ledger_names: list[str]) -> list[MappingResult]:
         return [self.map_ledger(n) for n in ledger_names]
 
-    def map_via_claude(self, unresolved: list[str]) -> dict[str, str]:
-        """Ask Claude API to resolve unresolved ledger names.
-        Returns {ledger_name: mapping_code}.
-        """
-        api_key = self._sdb.get_api_key()
+    def map_via_ai(self, unresolved: list[str]) -> dict[str, str]:
+        """Ask configured AI service to resolve unresolved ledger names."""
+        provider_name = self._sdb.get_ai_provider()
+        api_key = self._sdb.get_api_key(provider_name)
         if not api_key:
             return {}
+            
+        from core.ai_service import get_ai_service
+        service = get_ai_service(provider_name)
+        if not service:
+            return {}
+            
         try:
-            import anthropic
-            client = anthropic.Anthropic(api_key=api_key)
             corpus_sample = "\n".join(
                 f"{m.code}: {m.lookup_name}" for m in self._entries[:80]
             )
-            ledger_list = "\n".join(f"- {l}" for l in unresolved[:30])
-            prompt = (
-                f"You are a Chartered Accountant. Match each ledger name below to the best "
-                f"Schedule III / ICAI code from the reference list. "
-                f"Reply as JSON: {{\"ledger_name\": \"CODE\", ...}}\n\n"
-                f"Reference codes:\n{corpus_sample}\n\n"
-                f"Ledger names to map:\n{ledger_list}"
-            )
-            msg = client.messages.create(
-                model="claude-haiku-4-5-20251001",
-                max_tokens=1024,
-                messages=[{"role": "user", "content": prompt}],
-            )
-            import json, re
-            text = msg.content[0].text
-            m = re.search(r"\{.*\}", text, re.DOTALL)
-            if m:
-                return json.loads(m.group())
+            return service.solve_mapping(unresolved, corpus_sample, api_key)
         except Exception as e:
-            log.warning("Claude API mapping failed: %s", e)
+            log.warning("%s API mapping failed: %s", provider_name, e)
         return {}
 
     def confirm_and_learn(self, ledger_name: str, code: str):

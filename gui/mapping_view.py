@@ -30,7 +30,7 @@ class MappingView(ttk.Frame):
         top.pack(fill="x", padx=8, pady=6)
         label(top, "3.  Mapping Review", style="Sec.TLabel").pack(side="left")
         primary_btn(top, "▶ Auto-Map All", command=self._run_mapping).pack(side="left", padx=6)
-        secondary_btn(top, "☁ Claude API (unresolved)", command=self._run_claude).pack(side="left", padx=4)
+        secondary_btn(top, "☁ AI Assist (unresolved)", command=self._run_ai_assist).pack(side="left", padx=4)
         secondary_btn(top, "✔ Confirm All Green", command=self._confirm_all_green).pack(side="left", padx=4)
         primary_btn(top, "✔ Confirm & Proceed  F9", command=self._confirm_all).pack(side="right", padx=4)
 
@@ -127,14 +127,16 @@ class MappingView(ttk.Frame):
             self.after(0, self._save_to_db)
         threading.Thread(target=work, daemon=True).start()
 
-    def _run_claude(self):
+    def _run_ai_assist(self):
         unresolved = [r["ledger"] for r in self._rows
                       if r["conf"] < CONF_YELLOW and not r["confirmed"]]
         if not unresolved:
-            messagebox.showinfo("Claude API", "No unresolved mappings."); return
-        self._status_var.set(f"Sending {len(unresolved)} ledgers to Claude API …")
+            messagebox.showinfo("AI Assist", "No unresolved mappings."); return
+            
+        provider = self._sdb.get_ai_provider()
+        self._status_var.set(f"Sending {len(unresolved)} ledgers to {provider} API …")
         def work():
-            result = self._mapper.map_via_claude(unresolved)
+            result = self._mapper.map_via_ai(unresolved)
             for row in self._rows:
                 code = result.get(row["ledger"])
                 if code and code in self._lookup:

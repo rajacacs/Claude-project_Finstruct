@@ -66,12 +66,20 @@ class SettingsDB:
                 "INSERT OR REPLACE INTO settings(key,value) VALUES(?,?)", (key, value)
             )
 
-    def get_api_key(self) -> str:
-        v = self.get("claude_api_key")
+    def get_api_key(self, provider: str = "Claude") -> str:
+        key_name = f"{provider.lower()}_api_key"
+        v = self.get(key_name)
         return decrypt(v) if v else ""
 
-    def set_api_key(self, key: str):
-        self.set("claude_api_key", encrypt(key) if key else "")
+    def set_api_key(self, key: str, provider: str = "Claude"):
+        key_name = f"{provider.lower()}_api_key"
+        self.set(key_name, encrypt(key) if key else "")
+
+    def get_ai_provider(self) -> str:
+        return self.get("ai_provider", "Claude")
+
+    def set_ai_provider(self, provider: str):
+        self.set("ai_provider", provider)
 
     def get_annexure_tolerance(self) -> float:
         v = self.get("annexure_tolerance", "10")
