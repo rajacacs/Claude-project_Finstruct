@@ -61,6 +61,8 @@ a = Analysis(
         "lxml.etree",
         # Optional AI / ML (skip gracefully if absent at build time)
         "anthropic",
+        "openai",
+        "google.generativeai",
         "sentence_transformers",
         "sklearn.utils._cython_blas",
         "sklearn.neighbors.typedefs",
