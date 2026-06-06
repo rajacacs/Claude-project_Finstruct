@@ -15,6 +15,8 @@ class Dashboard(ttk.Frame):
         super().__init__(parent)
         self._sdb       = settings_db
         self._on_open   = on_open_project
+        self._selected_path = None
+        self._row_widgets = {} # path -> (bg_normal, list[labels])
         self._build()
         self._refresh()
 
@@ -53,36 +55,58 @@ class Dashboard(ttk.Frame):
                   style="Muted.TLabel").pack(pady=20)
             return
 
-        cols = [("name","Entity Name",240),("type","Type",180),
-                ("fy","FY",80),("opened","Last Opened",160),("path","Path",300)]
-        tree = ttk.Treeview(self._list_frame,
-                            columns=[c[0] for c in cols],
-                            show="headings", height=14)
-        for cid, hdr, w in cols:
-            tree.heading(cid, text=hdr)
-            tree.column(cid, width=w, anchor="w")
-        vsb = ttk.Scrollbar(self._list_frame, orient="vertical", command=tree.yview)
-        tree.configure(yscrollcommand=vsb.set)
-        vsb.pack(side="right", fill="y")
-        tree.pack(side="left", fill="both", expand=True)
+        # Custom scrollable grid for text wrapping
+        from gui.theme import scrolled_frame
+        outer, canvas, inner = scrolled_frame(self._list_frame)
+        outer.pack(fill="both", expand=True)
+        
+        self._selected_path = None
+        self._row_widgets = {}
 
-        for r in recent:
+        cols = [("Entity Name", 240), ("Type", 180), ("FY", 80), 
+                ("Last Opened", 160), ("Path", 300)]
+        
+        for i, (name, w) in enumerate(cols):
+            inner.columnconfigure(i, minsize=w)
+            tk.Label(inner, text=name, font=(T["font"], T["font_size"], "bold"),
+                     bg=T["header_bg"], fg=T["header_fg"], padx=10, pady=8, 
+                     anchor="w").grid(row=0, column=i, sticky="nsew")
+
+        for idx, r in enumerate(recent):
+            path = r["path"]
             opened = r["last_opened"][:16].replace("T"," ") if r["last_opened"] else ""
-            tree.insert("", "end", iid=r["path"],
-                        values=(r["entity_name"], r["entity_type"],
-                                r["fy"], opened, r["path"]))
-        tree.bind("<Double-Button-1>", lambda e: self._open_selected(tree))
-        tree.bind("<Return>", lambda e: self._open_selected(tree))
+            vals = [r["entity_name"], r["entity_type"], r["fy"], opened, path]
+            bg = T["bg_white"] if idx % 2 == 0 else T["bg_alt"]
+            
+            labels = []
+            for col_idx, val in enumerate(vals):
+                width = cols[col_idx][1]
+                lbl = tk.Label(inner, text=val, wraplength=width-20,
+                               bg=bg, fg=T["text"], font=(T["font"], T["font_size"]),
+                               padx=10, pady=6, anchor="nw", justify="left")
+                lbl.grid(row=idx+1, column=col_idx, sticky="nsew")
+                labels.append(lbl)
+                
+                # Bindings for selection and opening
+                lbl.bind("<Button-1>", lambda e, p=path: self._select_recent(p))
+                lbl.bind("<Double-Button-1>", lambda e, p=path: self._open_path(p))
+            
+            self._row_widgets[path] = (bg, labels)
 
         # Action buttons in header
         secondary_btn(self._recent_actions, "Remove from list",
-                      command=lambda: self._remove(tree)).pack(side="right")
+                      command=self._remove_recent).pack(side="right")
 
-    def _open_selected(self, tree: ttk.Treeview):
-        sel = tree.selection()
-        if not sel:
-            return
-        path = sel[0]
+    def _select_recent(self, path):
+        self._selected_path = path
+        for p, (bg_normal, labels) in self._row_widgets.items():
+            is_sel = (p == path)
+            bg = T["primary_light"] if is_sel else bg_normal
+            fg = T["primary"] if is_sel else T["text"]
+            for l in labels:
+                l.configure(bg=bg, fg=fg)
+
+    def _open_path(self, path: str):
         if not Path(path).exists():
             messagebox.showerror("Not found", f"Project file not found:\n{path}")
             self._sdb.remove_recent(path)
@@ -98,13 +122,13 @@ class Dashboard(ttk.Frame):
         if path:
             self._on_open(Path(path))
 
-    def _remove(self, tree: ttk.Treeview):
-        sel = tree.selection()
-        if sel:
-            self._sdb.remove_recent(sel[0])
+    def _remove_recent(self):
+        if self._selected_path:
+            self._sdb.remove_recent(self._selected_path)
             self._refresh()
 
     def _new_project(self):
+        NewProjectDialog(self, self._sdb, self._on_open)
         NewProjectDialog(self, self._sdb, self._on_open)
 
 
