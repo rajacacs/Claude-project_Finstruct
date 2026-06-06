@@ -228,7 +228,7 @@ def _build_trial_balance(ws, sentinel, etype, is_net_balance, lookup_names: list
         headers = [
             "Ledger Name (as per Books)",
             "Mapping — Schedule III / LLP Lookup Name",
-            f"Closing Balance — CY (₹)\n(positive = Dr, negative = Cr)",
+            "Closing Balance — CY (₹)",
             "Previous Year Figure (₹)",
         ]
         col_widths = [40, 65, 24, 24]
