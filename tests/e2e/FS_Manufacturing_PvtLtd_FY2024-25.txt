@@ -1,0 +1,349 @@
+=================================================================
+  VIDYA MANUFACTURING PVT LTD
+  Financial Statements for the year ended 31st March 2025
+  (Schedule III — Non-Ind AS)
+=================================================================
+
+
+─────────────────────────────────────────────────────────────────
+  BALANCE SHEET AS AT 31ST MARCH 2025
+─────────────────────────────────────────────────────────────────
+  Particulars                         Note           CY (₹)           PY (₹)
+─────────────────────────────────────────────────────────────────
+  BALANCE SHEET
+  I.  EQUITY AND LIABILITIES
+    1.  SHAREHOLDERS' FUNDS
+          (a) Share Capital                  3  ₹      5,000,000  ₹      4,500,000
+          (b) Reserves & Surplus             4  ₹      1,700,000  ₹      1,100,000
+          (c) Money received against Share Warrants       ₹              0  ₹              0
+      Sub-total — Shareholders' Funds (A)       ₹      6,700,000  ₹      5,600,000
+  ─────────────────────────────────────────────────────────────────
+    2.  NON-CURRENT LIABILITIES
+          (a) Long-term Borrowings           5  ₹      3,000,000  ₹      3,500,000
+          (b) Deferred Tax Liabilities (Net)       ₹              0  ₹              0
+          (c) Other Long-term Liabilities       ₹              0  ₹              0
+          (d) Long-term Provisions              ₹              0  ₹              0
+      Sub-total — Non-Current Liabilities (B)       ₹      3,000,000  ₹      3,500,000
+  ─────────────────────────────────────────────────────────────────
+    3.  CURRENT LIABILITIES
+          (a) Short-term Borrowings             ₹              0  ₹              0
+          (b) Trade Payables                 6  ₹      1,500,000  ₹      1,200,000
+          (c) Other Current Liabilities      7  ₹        500,000  ₹        430,000
+          (d) Short-term Provisions          8  ₹        400,000  ₹        350,000
+      Sub-total — Current Liabilities (C)       ₹      2,400,000  ₹      1,980,000
+  ─────────────────────────────────────────────────────────────────
+  TOTAL — EQUITY AND LIABILITIES (A+B+C)       ₹     12,100,000  ₹     11,080,000
+  ─────────────────────────────────────────────────────────────────
+  II.  ASSETS
+    1.  NON-CURRENT ASSETS
+          (a) Fixed Assets (Net Block)          ₹      5,500,000  ₹      5,000,000
+          (b) Non-Current Investments           ₹              0  ₹              0
+          (c) Deferred Tax Assets (Net)         ₹              0  ₹              0
+          (d) Long-term Loans & Advances        ₹              0  ₹              0
+          (e) Other Non-Current Assets          ₹              0  ₹              0
+      Sub-total — Non-Current Assets (D)       ₹      5,500,000  ₹      5,000,000
+  ─────────────────────────────────────────────────────────────────
+    2.  CURRENT ASSETS
+          (a) Inventories                    9  ₹      2,700,000  ₹      2,300,000
+          (b) Trade Receivables             10  ₹      2,200,000  ₹      1,800,000
+          (c) Cash and Cash Equivalents     11  ₹      1,000,000  ₹        820,000
+          (d) Short-term Loans & Advances   12  ₹        550,000  ₹        450,000
+          (e) Other Current Assets          13  ₹        150,000  ₹        120,000
+      Sub-total — Current Assets (E)        ₹      6,600,000  ₹      5,490,000
+  ─────────────────────────────────────────────────────────────────
+  TOTAL — ASSETS (D+E)                      ₹     12,100,000  ₹     10,490,000
+  ─────────────────────────────────────────────────────────────────
+
+
+─────────────────────────────────────────────────────────────────
+  STATEMENT OF PROFIT & LOSS FOR THE YEAR ENDED 31ST MARCH 2025
+─────────────────────────────────────────────────────────────────
+  Particulars                         Note           CY (₹)           PY (₹)
+─────────────────────────────────────────────────────────────────
+  STATEMENT OF PROFIT AND LOSS
+
+    I.   Revenue from Operations          14  ₹     15,000,000  ₹     12,000,000
+    II.  Other Income                     15  ₹        200,000  ₹        180,000
+  III. Total Revenue (I + II)               ₹     15,200,000  ₹     12,180,000
+  ─────────────────────────────────────────────────────────────────
+
+  IV.  EXPENSES:
+           Cost of Materials Consumed       16  ₹      7,000,000  ₹      5,800,000
+           Purchases of Stock-in-Trade          ₹              0  ₹              0
+           Changes in Inventories           17  ₹       -100,000  ₹        100,000
+           Employee Benefit Expenses        18  ₹      2,000,000  ₹      1,780,000
+           Finance Costs                    19  ₹        350,000  ₹        365,000
+           Depreciation & Amortisation      20  ₹        500,000  ₹        450,000
+           Other Expenses                   21  ₹      1,300,000  ₹      1,145,000
+       Total Expenses (IV)                  ₹     11,050,000  ₹      9,640,000
+  ─────────────────────────────────────────────────────────────────
+
+  V.   Profit/(Loss) before Tax (III – IV)       ₹      4,150,000  ₹      2,540,000
+  ─────────────────────────────────────────────────────────────────
+    VI.  Tax Expense                          ₹        400,000  ₹        350,000
+  VII. Profit/(Loss) after Tax (V – VI)       ₹      3,750,000  ₹      2,190,000
+  ─────────────────────────────────────────────────────────────────
+
+
+─────────────────────────────────────────────────────────────────
+  NOTES TO ACCOUNTS
+─────────────────────────────────────────────────────────────────
+  Note 1: Accounting Policies (see standard policy note)
+  Note 2: General Information
+
+
+  Note 1: Significant Accounting Policies
+  ───────────────────────────────────────────────────────
+    1.1 Basis of preparation                  ₹              0  ₹              0
+      These financial statements have been prepared in accordance with the Generally Accepted Accounting Principles in India (Indian GAAP) / Indian Accounting Standards (Ind AS), as applicable, under the historical cost convention on accrual basis.  ₹              0  ₹              0
+
+    1.2 Property, Plant & Equipment           ₹              0  ₹              0
+      PPE is stated at cost less accumulated depreciation. Depreciation is provided on Straight Line / Written Down Value method at rates prescribed under Schedule II of the Companies Act, 2013.  ₹              0  ₹              0
+
+    1.3 Inventories                           ₹              0  ₹              0
+      Inventories are valued at the lower of cost and net realisable value. Cost is determined on FIFO / Weighted Average basis.  ₹              0  ₹              0
+
+    1.4 Revenue Recognition                   ₹              0  ₹              0
+      Revenue from sale of goods is recognised when the significant risks and rewards of ownership of goods are transferred to the buyer. Revenue from services is recognised as per the terms of the contract.  ₹              0  ₹              0
+
+    1.5 Taxation                              ₹              0  ₹              0
+      Current tax is determined as the amount of tax payable in respect of taxable income for the year. Deferred tax is recognised on timing differences.  ₹              0  ₹              0
+
+  Note 2: General Information
+  ───────────────────────────────────────────────────────
+    [Company was incorporated on __ / __/ ____. CIN: __________. Registered Office: _______. The Company is primarily engaged in ______.]  ₹              0  ₹              0
+
+  Note 3: Share Capital
+  ───────────────────────────────────────────────────────
+  AUTHORISED:
+    [X] Equity Shares of ₹10/- each           ₹              0  ₹              0
+  ISSUED, SUBSCRIBED & PAID-UP:
+    Equity Shares of ₹10/- each fully paid up  ₹      5,000,000  ₹      4,500,000
+    Preference Shares                         ₹              0  ₹              0
+  Total                                     ₹      5,000,000  ₹      4,500,000
+  ───────────────────────────────────────────────────────
+
+  Movement in Share Capital:                ₹              0  ₹              0
+    Opening Balance                           ₹      4,500,000  ₹              0
+    Add: Issued during the year               ₹        500,000  ₹              0
+  Closing Balance                           ₹      5,000,000  ₹      4,500,000
+  ───────────────────────────────────────────────────────
+
+  Note 4: Reserves and Surplus
+  ───────────────────────────────────────────────────────
+    Capital Reserve                           ₹              0  ₹              0
+    Capital Redemption Reserve                ₹              0  ₹              0
+    Securities Premium Reserve                ₹              0  ₹              0
+    General Reserve                           ₹      1,000,000  ₹        800,000
+    Retained Earnings / Surplus in P&L        ₹        700,000  ₹        300,000
+  Total                                     ₹      1,700,000  ₹      1,100,000
+  ───────────────────────────────────────────────────────
+
+  Note 5: Long-Term Borrowings
+  ───────────────────────────────────────────────────────
+    Term Loans from Banks (Secured)           ₹      3,000,000  ₹      3,500,000
+    Term Loans from Financial Institutions    ₹              0  ₹              0
+    Bonds / Debentures                        ₹              0  ₹              0
+    Deposits                                  ₹              0  ₹              0
+    Loans from Related Parties                ₹              0  ₹              0
+    Other Long-term Borrowings                ₹              0  ₹              0
+  Total                                     ₹      3,000,000  ₹      3,500,000
+  ───────────────────────────────────────────────────────
+
+  Note 6: Trade Payables
+  ───────────────────────────────────────────────────────
+    Trade Payables – MSME                     ₹              0  ₹              0
+    Trade Payables – Others                   ₹      1,500,000  ₹      1,200,000
+  Total                                     ₹      1,500,000  ₹      1,200,000
+  ───────────────────────────────────────────────────────
+
+  Ageing Schedule — Trade Payables:         ₹              0  ₹              0
+  (Outstanding for following periods from due date of payment)  ₹              0  ₹              0
+
+  Note 7: Other Current Liabilities
+  ───────────────────────────────────────────────────────
+    Current Maturities of Finance Lease Obligations  ₹              0  ₹              0
+    Interest Accrued but Not Due on Borrowings  ₹        300,000  ₹        250,000
+    Unpaid Dividends                          ₹        200,000  ₹        180,000
+    Advance from Customers (current)          ₹              0  ₹              0
+    Other Payables (statutory dues, salary payable, etc.)  ₹              0  ₹              0
+  Total                                     ₹        500,000  ₹        430,000
+  ───────────────────────────────────────────────────────
+
+  Note 8: Short-term Provisions
+  ───────────────────────────────────────────────────────
+    Provision for Income Tax (Net of Advance Tax)  ₹        400,000  ₹        350,000
+    Provision for Employee Benefits           ₹              0  ₹              0
+    Other Short-term Provisions               ₹              0  ₹              0
+  Total                                     ₹        400,000  ₹        350,000
+  ───────────────────────────────────────────────────────
+
+  Note 9: Inventories
+  ───────────────────────────────────────────────────────
+    Raw Materials                             ₹      1,200,000  ₹      1,000,000
+    Work-in-Progress                          ₹        600,000  ₹        500,000
+    Finished Goods                            ₹        900,000  ₹        800,000
+    Stock-in-Trade                            ₹              0  ₹              0
+    Stores, Spares & Packing Material         ₹              0  ₹              0
+  Total                                     ₹      2,700,000  ₹      2,300,000
+  ───────────────────────────────────────────────────────
+
+  Note 10: Trade Receivables
+  ───────────────────────────────────────────────────────
+    Outstanding > 6 months                    ₹              0  ₹              0
+    Outstanding ≤ 6 months                    ₹      2,200,000  ₹      1,800,000
+    Less: Provision for Doubtful Debts        ₹              0  ₹              0
+  Total                                     ₹      2,200,000  ₹      1,800,000
+  ───────────────────────────────────────────────────────
+
+  Ageing Schedule — Trade Receivables:      ₹              0  ₹              0
+
+  Note 11: Cash and Cash Equivalents
+  ───────────────────────────────────────────────────────
+    Cash in Hand                              ₹        150,000  ₹        120,000
+    Balances with Banks – Current A/c         ₹        850,000  ₹        700,000
+    Balances with Banks – Savings A/c         ₹              0  ₹              0
+    Fixed Deposits (maturity < 3 months)      ₹              0  ₹              0
+  Total                                     ₹      1,000,000  ₹        820,000
+  ───────────────────────────────────────────────────────
+
+  Note 12: Short-term Loans and Advances
+  ───────────────────────────────────────────────────────
+    Advance to Suppliers (considered good)    ₹        350,000  ₹        300,000
+    Advance Tax / TDS Receivable (Net)        ₹              0  ₹              0
+    Balance with Customs / Excise Authorities  ₹        200,000  ₹        150,000
+    Other Short-term Loans & Advances         ₹              0  ₹              0
+  Total                                     ₹        550,000  ₹        450,000
+  ───────────────────────────────────────────────────────
+
+  Note 13: Other Current Assets
+  ───────────────────────────────────────────────────────
+    Interest Accrued on Deposits / Investments  ₹              0  ₹              0
+    Prepaid Expenses                          ₹        150,000  ₹        120,000
+    Other Current Assets                      ₹              0  ₹              0
+  Total                                     ₹        150,000  ₹        120,000
+  ───────────────────────────────────────────────────────
+
+  Note 14: Revenue from Operations
+  ───────────────────────────────────────────────────────
+    Sale of Products                          ₹     15,000,000  ₹     12,000,000
+    Sale of Services                          ₹              0  ₹              0
+    Other Operating Revenue                   ₹              0  ₹              0
+    Less: GST / Excise Duty (if applicable)   ₹              0  ₹              0
+  Total                                     ₹     15,000,000  ₹     12,000,000
+  ───────────────────────────────────────────────────────
+
+  Note 15: Other Income
+  ───────────────────────────────────────────────────────
+    Interest Income                           ₹        200,000  ₹        180,000
+    Dividend Income                           ₹              0  ₹              0
+    Profit on Sale of Assets                  ₹              0  ₹              0
+    Rental Income                             ₹              0  ₹              0
+    Miscellaneous / Other Income              ₹              0  ₹              0
+  Total                                     ₹        200,000  ₹        180,000
+  ───────────────────────────────────────────────────────
+
+  Note 16: Cost of Materials Consumed
+  ───────────────────────────────────────────────────────
+    Opening Stock of Raw Materials            ₹      7,000,000  ₹      5,800,000
+    Add: Purchases during the year            ₹              0  ₹              0
+    Less: Closing Stock of Raw Materials      ₹      1,200,000  ₹      1,000,000
+  Cost of Materials Consumed                ₹      5,800,000  ₹      4,800,000
+  ───────────────────────────────────────────────────────
+
+  Note 17: Changes in Inventories of Finished Goods, WIP & Stock-in-Trade
+  ───────────────────────────────────────────────────────
+  OPENING STOCKS:
+    Finished Goods                            ₹        800,000  ₹        900,000
+    Work-in-Progress                          ₹              0  ₹              0
+  LESS: CLOSING STOCKS:
+    Finished Goods                            ₹        900,000  ₹        800,000
+    Work-in-Progress                          ₹              0  ₹              0
+  Net Change in Inventories                 ₹       -100,000  ₹        100,000
+  ───────────────────────────────────────────────────────
+
+  Note 18: Employee Benefit Expenses
+  ───────────────────────────────────────────────────────
+    Salaries & Wages                          ₹      1,800,000  ₹      1,600,000
+    Bonus                                     ₹              0  ₹              0
+    PF / ESI Contributions                    ₹        200,000  ₹        180,000
+    Gratuity                                  ₹              0  ₹              0
+    Staff Welfare                             ₹              0  ₹              0
+  Total                                     ₹      2,000,000  ₹      1,780,000
+  ───────────────────────────────────────────────────────
+
+  Note 19: Finance Costs
+  ───────────────────────────────────────────────────────
+    Interest on Term Loans                    ₹        300,000  ₹        320,000
+    Interest on Working Capital Facilities    ₹              0  ₹              0
+    Bank Charges & Other Finance Costs        ₹         50,000  ₹         45,000
+  Total                                     ₹        350,000  ₹        365,000
+  ───────────────────────────────────────────────────────
+
+  Note 20: Depreciation and Amortisation Expense
+  ───────────────────────────────────────────────────────
+    Depreciation on Tangible Assets           ₹        500,000  ₹        450,000
+    Amortisation of Intangible Assets         ₹              0  ₹              0
+  Total                                     ₹        500,000  ₹        450,000
+  ───────────────────────────────────────────────────────
+
+  Note 21: Other Expenses
+  ───────────────────────────────────────────────────────
+    Power & Fuel                              ₹        800,000  ₹        700,000
+    Rent                                      ₹              0  ₹              0
+    Repairs & Maintenance                     ₹        200,000  ₹        180,000
+    Insurance                                 ₹              0  ₹              0
+    Printing & Stationery                     ₹              0  ₹              0
+    Travelling & Conveyance                   ₹              0  ₹              0
+    Communication                             ₹              0  ₹              0
+    Professional & Legal Fees                 ₹        100,000  ₹         90,000
+    Audit Fees                                ₹        100,000  ₹         90,000
+    Advertisement                             ₹              0  ₹              0
+    GST / Taxes & Duties                      ₹              0  ₹              0
+    Bad Debts Written Off                     ₹              0  ₹              0
+    Miscellaneous Expenses                    ₹        100,000  ₹         85,000
+  Total                                     ₹      1,300,000  ₹      1,145,000
+  ───────────────────────────────────────────────────────
+
+  Note 22: Related Party Disclosures
+  ───────────────────────────────────────────────────────
+    As required by AS 18, the Company's related party transactions are disclosed below.  ₹              0  ₹              0
+
+  KEY MANAGERIAL PERSONNEL (KMP):
+    [List names, designations and relationships of KMP]  ₹              0  ₹              0
+
+  TRANSACTIONS WITH RELATED PARTIES:
+    [List nature and amount of each material transaction with related parties during the year]  ₹              0  ₹              0
+
+  OUTSTANDING BALANCES:
+    [List balances due to/from related parties as at year end]  ₹              0  ₹              0
+
+  Note 23: Contingent Liabilities and Commitments
+  ───────────────────────────────────────────────────────
+  CONTINGENT LIABILITIES (NOT PROVIDED FOR):
+    (i) Claims against the Company not acknowledged as debts: ₹ NIL / [amount]  ₹              0  ₹              0
+    (ii) Guarantees: ₹ NIL / [amount]         ₹              0  ₹              0
+    (iii) Other money for which the Company is contingently liable: ₹ NIL / [amount]  ₹              0  ₹              0
+
+  CAPITAL COMMITMENTS:
+    Estimated amount of contracts remaining to be executed on capital account (net of advances): ₹ NIL / [amount]  ₹              0  ₹              0
+
+  Note 24: Events After the Reporting Period
+  ───────────────────────────────────────────────────────
+    No material events have occurred after the Balance Sheet date that require disclosure or adjustment in these financial statements. / [Describe any material subsequent events and their financial impact]  ₹              0  ₹              0
+
+  Note 25: Earnings Per Share
+  ───────────────────────────────────────────────────────
+  CALCULATION OF EPS (BASIC AND DILUTED):
+    Net Profit/(Loss) after Tax (₹)           ₹      3,750,000  ₹              0
+    Weighted Average Equity Shares (Nos.)     ₹        500,000  ₹              0
+    Face Value per Share (₹)                  ₹             10  ₹              0
+    Basic / Diluted EPS (₹)                   ₹              8  ₹              0
+
+
+=================================================================
+  Generated by FinStruct | Phase 2 Build | 2024-25
+  Auto-mapped ledgers  : 35
+  Manually mapped      : 0
+  Notes generated      : 25 (Note numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25])
+=================================================================
