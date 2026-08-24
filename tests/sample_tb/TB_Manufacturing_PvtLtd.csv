@@ -1,0 +1,37 @@
+Ledger,Group,SubType,CY Net,PY Net
+Equity Share Capital,Share Capital,Equity Share Capital,5000000,4500000
+General Reserve,Reserves & Surplus,General Reserve,1000000,800000
+Retained Earnings / Surplus,Reserves & Surplus,Retained Earnings / Surplus in P&L,700000,300000
+Term Loan from SBI,Long Term Borrowings,Term Loans from Banks,3000000,3500000
+Trade Payables – Creditors,Trade Payables,Trade Payables – Others,1500000,1200000
+Statutory Dues Payable,Other Current Liabilities,Statutory Dues Payable,300000,250000
+Employee Payables,Other Current Liabilities,Employee Related Payables,200000,180000
+Provision for Income Tax,Short Term Provisions,Provision for Tax (Current Year),400000,350000
+Accumulated Depreciation,Property Plant & Equipment,Less: Accumulated Depreciation,2500000,2000000
+Plant & Machinery – Gross Block,Property Plant & Equipment,Tangible Assets – Gross Block,8000000,7000000
+Raw Material Stock,Inventories,Raw Materials,1200000,1000000
+Work-in-Progress,Inventories,Work-in-Progress,600000,500000
+Finished Goods,Inventories,Finished Goods,900000,800000
+Trade Receivables (< 6 months),Trade Receivables,Trade Receivables – Outstanding ≤ 6 months,2200000,1800000
+Cash in Hand,Cash & Cash Equivalents,Cash in Hand,150000,120000
+Bank Current Account – HDFC,Cash & Cash Equivalents,Balances with Banks – Current A/c,850000,700000
+Advance to Suppliers,Short Term Loans & Advances,Advance to Suppliers,350000,300000
+Advance Tax & TDS Receivable,Short Term Loans & Advances,Advance Tax / TDS Receivable,200000,150000
+GST Input Tax Credit,Other Current Assets,GST Receivable / Input Tax Credit,150000,120000
+Sales – Manufactured Goods,Revenue from Operations,Sale of Products,15000000,12000000
+Interest Income on FD,Other Income,Interest Income,200000,180000
+Opening Stock – Finished Goods,Changes in Inventories,Opening Stock – Finished Goods,800000,900000
+Closing Stock – Finished Goods,Changes in Inventories,Less: Closing Stock – Finished Goods,900000,800000
+Raw Material Consumed,Cost of Materials Consumed,Raw Material Consumed,7000000,5800000
+Salaries & Wages,Employee Benefit Expenses,Salaries & Wages,1800000,1600000
+PF and ESI Contribution,Employee Benefit Expenses,PF / ESI Contribution,200000,180000
+Interest on Term Loan,Finance Costs,Interest on Term Loans,300000,320000
+Bank Charges,Finance Costs,Bank Charges,50000,45000
+Depreciation on Plant,Depreciation & Amortisation,Depreciation – Tangible Assets,500000,450000
+Power & Fuel,Other Expenses,Power & Fuel,800000,700000
+Repairs & Maintenance,Other Expenses,Repairs & Maintenance,200000,180000
+Professional & Legal Fees,Other Expenses,Professional & Legal Fees,100000,90000
+Audit Fees,Other Expenses,Audit Fees,100000,90000
+Miscellaneous Expenses,Other Expenses,Miscellaneous Expenses,100000,85000
+Current Income Tax,Current Tax,Current Income Tax,400000,350000
+P&L Transfer,P&L Transfer,,3750000,
